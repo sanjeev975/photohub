@@ -108,152 +108,6 @@
       background-size: 16px 16px;
       background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
-
-    /* ===================================================
-       DESIGN REFRESH (visual styling only, no logic changes)
-       =================================================== */
-    body {
-      background:
-        radial-gradient(1100px 480px at 8% -8%, #e0e7ff 0%, transparent 60%),
-        radial-gradient(900px 420px at 100% 0%, #f5e8ff 0%, transparent 55%),
-        #f1f5f9 !important;
-      background-attachment: fixed !important;
-    }
-    body > header {
-      background: rgba(255, 255, 255, 0.82) !important;
-      -webkit-backdrop-filter: saturate(160%) blur(12px);
-      backdrop-filter: saturate(160%) blur(12px);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.28) !important;
-      box-shadow: 0 10px 28px -20px rgba(15, 23, 42, 0.35);
-    }
-    body > header h1 {
-      background: linear-gradient(90deg, #312e81, #6366f1);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    body > header > div:first-child > div:first-child {
-      background-image: linear-gradient(135deg, #6366f1, #7c3aed) !important;
-      border-radius: 12px !important;
-      box-shadow: 0 8px 18px -8px rgba(79, 70, 229, 0.8);
-    }
-    body > aside {
-      background-image: linear-gradient(90deg, #1e1b4b, #312e81 50%, #1e1b4b) !important;
-    }
-
-    /* Cards */
-    main section .bg-white.rounded-xl {
-      border-radius: 16px !important;
-      border-color: rgba(226, 232, 240, 0.95) !important;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 14px 30px -18px rgba(15, 23, 42, 0.22) !important;
-    }
-    main h3.uppercase::before {
-      content: "";
-      display: inline-block;
-      width: 3px;
-      height: 11px;
-      margin-right: 8px;
-      border-radius: 2px;
-      vertical-align: -1px;
-      background: linear-gradient(180deg, #6366f1, #8b5cf6);
-    }
-
-    /* Tabs */
-    .tab-btn {
-      border-radius: 11px !important;
-      transition: all 0.2s ease;
-    }
-    .tab-btn.bg-indigo-600 {
-      background-image: linear-gradient(135deg, #6366f1, #4f46e5);
-      box-shadow: 0 8px 16px -8px rgba(79, 70, 229, 0.75) !important;
-    }
-    .tab-content:not(.hidden) {
-      animation: ppFadeUp 0.28s ease both;
-    }
-    @keyframes ppFadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Buttons */
-    main button.bg-indigo-600,
-    dialog button.bg-indigo-600 {
-      background-image: linear-gradient(135deg, #6366f1, #4f46e5);
-      transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    main button.bg-indigo-600:hover,
-    dialog button.bg-indigo-600:hover {
-      filter: brightness(1.06);
-    }
-    #btn-export-pdf {
-      box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.7) !important;
-      border-radius: 12px !important;
-    }
-    #btn-export-single, #btn-export-png, #btn-export-jpeg {
-      border-radius: 12px !important;
-    }
-
-    /* Inputs */
-    main input[type="number"],
-    main input[type="text"],
-    main textarea,
-    main select {
-      border-radius: 10px !important;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-    }
-    main input:focus,
-    main textarea:focus,
-    main select:focus,
-    dialog input:focus,
-    dialog select:focus {
-      outline: none !important;
-      border-color: #6366f1 !important;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22) !important;
-    }
-
-    /* People cards */
-    #people-list > div {
-      border-radius: 12px !important;
-    }
-    #people-list > div:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.35);
-    }
-
-    /* Preview area */
-    #preview-viewport {
-      border-radius: 18px !important;
-      border-color: rgba(203, 213, 225, 0.9) !important;
-      box-shadow: inset 0 2px 14px rgba(15, 23, 42, 0.08);
-    }
-    #preview-viewport.checker-pattern {
-      background-color: #eef2f7;
-      background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
-                        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
-                        linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
-                        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
-    }
-    #sheet-preview-canvas {
-      border-radius: 3px !important;
-      box-shadow: 0 24px 50px -14px rgba(15, 23, 42, 0.38), 0 0 0 1px rgba(15, 23, 42, 0.06) !important;
-    }
-
-    /* Dialogs & toasts */
-    dialog {
-      border-radius: 20px !important;
-      box-shadow: 0 30px 80px -20px rgba(15, 23, 42, 0.5) !important;
-    }
-    dialog::backdrop {
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-    }
-    #toast-container > div {
-      border-radius: 12px !important;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .tab-content:not(.hidden) { animation: none; }
-    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
@@ -353,7 +207,7 @@
         <!-- Drag & Drop Upload Zone -->
         <div id="drop-zone" class="bg-white rounded-xl border-2 border-dashed border-slate-300 hover:border-indigo-500 p-6 text-center transition-all cursor-pointer group shadow-sm block relative overflow-hidden">
           <!-- Full-area invisible native file input: ANY click anywhere on the drop zone directly triggers native file browser dialog without iframe or label bugs! -->
-          <input type="file" id="file-input" multiple accept="image/*,image/jpeg,image/png,image/heic,image/heif,.jpg,.jpeg,.png,.heic,.heif,.webp,.jfif,.bmp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Click or drop photos to upload" />
+          <input type="file" id="file-input" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.jfif,.bmp,.heic,.heif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Click or drop photos to upload" />
           
           <div class="w-12 h-12 rounded-full bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center mb-3 transition-colors pointer-events-none">
             <i data-lucide="upload-cloud" class="w-6 h-6"></i>
@@ -361,7 +215,7 @@
           <h2 class="text-sm font-semibold text-slate-900 mb-1 pointer-events-none">Upload Portrait Photographs</h2>
           <p class="text-xs text-slate-500 mb-3 pointer-events-none">Drag &amp; drop files here or click anywhere to browse</p>
           <div class="flex items-center justify-center gap-2 text-[11px] text-slate-400 pointer-events-none">
-            <span>JPG, JPEG, PNG, HEIC, WebP</span>
+            <span>JPEG, PNG, WebP</span>
             <span>·</span>
             <span>Up to 12 people</span>
             <span>·</span>
@@ -653,38 +507,40 @@
           <p class="text-[11px] text-slate-400">Borders are drawn within the exact physical millimeter boundaries and scale seamlessly to 300 DPI.</p>
         </div>
 
-        <!-- Caption Bar (Name / Date) below the photo -->
+        <!-- Photo Name & Date Strip (Bottom White Bar) -->
         <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Caption Bar (Name / Date)</h3>
-            <button type="button" id="btn-caption-clear" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium">Clear Text</button>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <i data-lucide="type" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <span>Name &amp; Date on Photo</span>
+            </h3>
+            <span class="text-[10px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded border border-slate-200">Bottom White Bar</span>
           </div>
+          
+          <p class="text-[11px] text-slate-500 leading-snug">
+            Add candidate name, date of photo (DOP), or custom text on a compliant solid white strip at the bottom of the photo. Does not alter physical photo dimensions.
+          </p>
 
-          <div>
-            <label for="input-caption-text" class="text-[11px] font-semibold text-slate-600 mb-1 block">Text under photo (Enter = new line, up to 5 lines)</label>
-            <div class="flex items-center gap-2">
-              <textarea id="input-caption-text" rows="3" maxlength="200" placeholder="Name&#10;Date" class="flex-1 text-xs p-2 border border-slate-300 rounded-lg resize-y leading-snug"></textarea>
-              <button type="button" id="btn-caption-date" class="shrink-0 px-2.5 py-2 text-[11px] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg" title="Append today's date to the text">+ Today</button>
+          <div class="space-y-2">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="input-photo-text" class="text-[11px] font-semibold text-slate-700">Photo Text / Name &amp; Date</label>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="btn-insert-today-date" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 cursor-pointer" title="Append today's date">
+                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                    <span>+ Today's Date</span>
+                  </button>
+                  <button type="button" id="btn-clear-photo-text" class="text-[10px] text-rose-600 hover:text-rose-800 font-medium cursor-pointer" title="Clear text">
+                    Clear
+                  </button>
+                </div>
+              </div>
+              <textarea id="input-photo-text" rows="2" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-slate-400 placeholder:font-sans" placeholder="e.g.&#10;NAME: JOHN DOE&#10;DOP: 21/10/2026"></textarea>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>Renders cleanly at bottom of image within existing dimensions</span>
             </div>
           </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block" title="The bar grows automatically if the text needs more room">Min Bar Height (mm)</label>
-              <input type="number" id="input-caption-bar" min="3" max="25" step="0.5" value="6" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
-            </div>
-            <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Font Size (pt)</label>
-              <input type="number" id="input-caption-font" min="5" max="30" step="0.5" value="9" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
-            </div>
-            <div class="flex items-end pb-2">
-              <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-slate-700 select-none">
-                <input type="checkbox" id="toggle-caption-bold" class="w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
-                <span>Bold</span>
-              </label>
-            </div>
-          </div>
-          <p class="text-[11px] text-slate-400 leading-relaxed">A white bar is added just below the photo on the sheet. The photo's own size stays exactly the same; only the row gets taller to fit the text. Leave empty for no bar.</p>
         </div>
       </div>
 
@@ -800,17 +656,17 @@
             </button>
           </div>
 
-          <div class="grid grid-cols-3 gap-3">
+          <div class="grid grid-cols-3 gap-2.5">
             <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Sheet Margin (mm)</label>
-              <input type="number" id="input-sheet-margin" min="2" max="40" step="1" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
+              <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Side Margins (mm)">Side Margin (mm)</label>
+              <input type="number" id="input-sheet-margin" min="0" max="50" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
             <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block" title="Extra control for the top edge only. Follows Sheet Margin until you change it.">Top Margin (mm)</label>
-              <input type="number" id="input-top-margin" min="0" max="80" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
+              <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Top Margin (mm)">Top Margin (mm)</label>
+              <input type="number" id="input-sheet-margin-top" min="0" max="100" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
             <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Photo Gap (mm)</label>
+              <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Photo Gap / Spacing (mm)">Photo Gap (mm)</label>
               <input type="number" id="input-photo-spacing" min="0" max="25" step="0.5" value="3" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
           </div>
@@ -1586,6 +1442,7 @@
       orientation: 'portrait',
       layoutMode: 'single',
       sheetMarginMm: 10,
+      sheetMarginTopMm: 10,
       photoSpacingMm: 3,
       borderThicknessMm: 0.3,
       borderColor: '#000000',
@@ -1691,6 +1548,9 @@
       const inputMargin = document.getElementById('input-sheet-margin');
       if (inputMargin) inputMargin.value = d.sheetMarginMm.toString();
 
+      const inputMarginTop = document.getElementById('input-sheet-margin-top');
+      if (inputMarginTop) inputMarginTop.value = (d.sheetMarginTopMm !== undefined ? d.sheetMarginTopMm : d.sheetMarginMm).toString();
+
       const inputSpacing = document.getElementById('input-photo-spacing');
       if (inputSpacing) inputSpacing.value = d.photoSpacingMm.toString();
 
@@ -1711,6 +1571,7 @@
         orientation: AppState.orientation || 'portrait',
         layoutMode: AppState.layoutMode || 'single',
         sheetMarginMm: AppState.sheetMarginMm || 10,
+        sheetMarginTopMm: AppState.sheetMarginTopMm !== undefined ? AppState.sheetMarginTopMm : (AppState.sheetMarginMm || 10),
         photoSpacingMm: AppState.photoSpacingMm || 3,
         showCutGuides: AppState.showCutGuides !== undefined ? AppState.showCutGuides : true,
         centerGrid: AppState.centerGrid !== undefined ? AppState.centerGrid : true,
@@ -1737,6 +1598,7 @@
       AppState.paperSize = d.paperSize;
       AppState.orientation = d.orientation;
       AppState.sheetMarginMm = d.sheetMarginMm;
+      AppState.sheetMarginTopMm = d.sheetMarginTopMm !== undefined ? d.sheetMarginTopMm : d.sheetMarginMm;
       AppState.photoSpacingMm = d.photoSpacingMm;
       AppState.showCutGuides = d.showCutGuides;
       AppState.centerGrid = d.centerGrid;
@@ -1770,6 +1632,7 @@
         AppState.paperSize = FACTORY_DEFAULTS.paperSize;
         AppState.orientation = FACTORY_DEFAULTS.orientation;
         AppState.sheetMarginMm = FACTORY_DEFAULTS.sheetMarginMm;
+        AppState.sheetMarginTopMm = FACTORY_DEFAULTS.sheetMarginTopMm;
         AppState.photoSpacingMm = FACTORY_DEFAULTS.photoSpacingMm;
         AppState.showCutGuides = FACTORY_DEFAULTS.showCutGuides;
         AppState.centerGrid = FACTORY_DEFAULTS.centerGrid;
@@ -1805,6 +1668,7 @@
       AppState.orientation = d.orientation;
       AppState.layoutMode = d.layoutMode;
       AppState.sheetMarginMm = d.sheetMarginMm;
+      AppState.sheetMarginTopMm = d.sheetMarginTopMm !== undefined ? d.sheetMarginTopMm : d.sheetMarginMm;
       AppState.photoSpacingMm = d.photoSpacingMm;
       AppState.showCutGuides = d.showCutGuides;
       AppState.centerGrid = d.centerGrid;
@@ -1822,10 +1686,10 @@
       layoutMode: 'single', // 'single' | 'mixed'
       singleCopies: 4, // 4 copies default as requested
       sheetMarginMm: 10,
+      sheetMarginTopMm: 10,
       photoSpacingMm: 3,
       showCutGuides: true,
       centerGrid: true,
-      topMarginMm: null, // null = follow Sheet Margin until user sets it
       activeSheetIndex: 0,
       zoomLevel: 'fit', // 'fit' | 1 | number
       zoomScale: 1.0,
@@ -1875,7 +1739,6 @@
       checkCdnStatus();
       initLucide();
       bindEvents();
-      bindTopMarginAndCaptionEvents();
       updateUI();
     });
 
@@ -1924,6 +1787,7 @@
         borderThicknessMm: defaults.borderThicknessMm !== undefined ? defaults.borderThicknessMm : 0.3,
         borderColor: defaults.borderColor || '#000000',
         copies: defaults.singleCopies || 4, // for mixed layout
+        captionText: '', // Name & date strip text
         cropData: null, // Cropper.js data cache
         canvasCache: null // Processed high-res canvas cache
       };
@@ -1945,152 +1809,6 @@
       }
       const preset = PRESET_DIMS[person.presetKey] || PRESET_DIMS['a4_6per_row'];
       return { width: preset.width, height: preset.height };
-    }
-
-    // ========================================================
-    // TOP MARGIN & CAPTION BAR (name / date under photo)
-    // ========================================================
-    function getTopMarginMm() {
-      const t = AppState.topMarginMm;
-      return (t === null || t === undefined || isNaN(t)) ? AppState.sheetMarginMm : Math.max(0, t);
-    }
-
-    function syncTopMarginInput() {
-      const input = document.getElementById('input-top-margin');
-      if (input && document.activeElement !== input) {
-        input.value = String(getTopMarginMm());
-      }
-    }
-
-    function getCaptionSettings(p) {
-      const raw = (p && p.captionText) || '';
-      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0).slice(0, 5);
-      const bar = parseFloat(p && p.captionBarMm);
-      const font = parseFloat(p && p.captionFontPt);
-      const fontPt = font > 0 ? font : 9;
-      const minBar = bar > 0 ? bar : 6;
-      // Bar grows automatically so every line fits
-      const lineMm = (fontPt / 72) * MM_PER_INCH * 1.25;
-      const neededMm = lines.length * lineMm + 2;
-      return {
-        text: lines.join('\n'),
-        lines,
-        barMm: lines.length ? Math.max(minBar, neededMm) : minBar,
-        fontPt,
-        bold: !!(p && p.captionBold)
-      };
-    }
-
-    // Extra height (mm) each grid row needs for caption bars. Uniform across the grid.
-    function getCaptionExtraMm(persons) {
-      let extra = 0;
-      (persons || []).forEach(p => {
-        const cs = getCaptionSettings(p);
-        if (cs.text) extra = Math.max(extra, cs.barMm);
-      });
-      return extra;
-    }
-
-    function drawCaptionBar(ctx, item, x, y, w, h, dpi) {
-      const cs = getCaptionSettings(item.person);
-      if (!cs.text || !item.captionBarMm) return;
-      const barPx = mmToPx(item.captionBarMm, dpi);
-
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x, y + h, w, barPx);
-
-      // Fit the widest line inside the photo width
-      let fontPx = (cs.fontPt / 72) * dpi;
-      const weight = cs.bold ? '700' : '500';
-      const family = '"Plus Jakarta Sans", Arial, sans-serif';
-      const maxW = w * 0.94;
-      const widest = () => Math.max(...cs.lines.map(l => ctx.measureText(l).width));
-      ctx.font = `${weight} ${fontPx}px ${family}`;
-      while (widest() > maxW && fontPx > 4) {
-        fontPx -= 0.5;
-        ctx.font = `${weight} ${fontPx}px ${family}`;
-      }
-
-      // Draw each line, stacked and centered vertically inside the bar
-      const lineH = fontPx * 1.25;
-      const blockH = lineH * cs.lines.length;
-      const firstCenterY = y + h + (barPx - blockH) / 2 + lineH / 2;
-      ctx.fillStyle = '#000000';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      cs.lines.forEach((line, i) => {
-        ctx.fillText(line, x + w / 2, firstCenterY + i * lineH);
-      });
-
-      // One border around the whole block (photo + caption bar)
-      const person = item.person;
-      if (person && person.borderThicknessMm > 0) {
-        const borderPx = (person.borderThicknessMm / MM_PER_INCH) * dpi;
-        ctx.lineWidth = borderPx;
-        ctx.strokeStyle = person.borderColor || '#000000';
-        ctx.setLineDash([]);
-        ctx.strokeRect(x + borderPx / 2, y + borderPx / 2, w - borderPx, h + barPx - borderPx);
-      }
-      ctx.restore();
-    }
-
-    function syncCaptionInputs(person) {
-      if (!person) return;
-      const cs = getCaptionSettings(person);
-      const t = document.getElementById('input-caption-text');
-      if (t && document.activeElement !== t) t.value = person.captionText || '';
-      const b = document.getElementById('input-caption-bar');
-      if (b) b.value = cs.barMm;
-      const f = document.getElementById('input-caption-font');
-      if (f) f.value = cs.fontPt;
-      const bold = document.getElementById('toggle-caption-bold');
-      if (bold) bold.checked = cs.bold;
-    }
-
-    function bindTopMarginAndCaptionEvents() {
-      document.getElementById('input-top-margin')?.addEventListener('input', (e) => {
-        const raw = e.target.value;
-        const v = parseFloat(raw);
-        AppState.topMarginMm = (raw === '' || isNaN(v)) ? null : Math.max(0, v);
-        scheduleSheetRender();
-      });
-
-      const onCaptionChange = () => {
-        const person = getActivePerson();
-        if (!person) return;
-        person.captionText = document.getElementById('input-caption-text').value;
-        person.captionBarMm = parseFloat(document.getElementById('input-caption-bar').value) || 6;
-        person.captionFontPt = parseFloat(document.getElementById('input-caption-font').value) || 9;
-        person.captionBold = document.getElementById('toggle-caption-bold').checked;
-        person.canvasCache = null; // border placement depends on caption presence
-        scheduleSheetRender();
-      };
-
-      ['input-caption-text', 'input-caption-bar', 'input-caption-font'].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', onCaptionChange);
-      });
-      document.getElementById('toggle-caption-bold')?.addEventListener('change', onCaptionChange);
-
-      document.getElementById('btn-caption-date')?.addEventListener('click', () => {
-        const person = getActivePerson();
-        if (!person) {
-          showToast('Select a photo first', 'info');
-          return;
-        }
-        const input = document.getElementById('input-caption-text');
-        const d = new Date();
-        const dateStr = [String(d.getDate()).padStart(2, '0'), String(d.getMonth() + 1).padStart(2, '0'), d.getFullYear()].join('/');
-        input.value = input.value.trim() ? `${input.value.trim()}\n${dateStr}` : dateStr;
-        onCaptionChange();
-      });
-
-      document.getElementById('btn-caption-clear')?.addEventListener('click', () => {
-        const person = getActivePerson();
-        if (!person) return;
-        document.getElementById('input-caption-text').value = '';
-        onCaptionChange();
-      });
     }
 
     // Bind All Event Handlers
@@ -2406,13 +2124,17 @@
 
           if (person.presetKey === 'a4_6per_row') {
             AppState.sheetMarginMm = 2.57;
+            AppState.sheetMarginTopMm = 10;
             AppState.photoSpacingMm = 2.57;
             document.getElementById('input-sheet-margin').value = '2.57';
+            document.getElementById('input-sheet-margin-top').value = '10';
             document.getElementById('input-photo-spacing').value = '2.57';
           } else if (person.presetKey === '35x45') {
             AppState.sheetMarginMm = 10;
+            AppState.sheetMarginTopMm = 10;
             AppState.photoSpacingMm = 3;
             document.getElementById('input-sheet-margin').value = '10';
+            document.getElementById('input-sheet-margin-top').value = '10';
             document.getElementById('input-photo-spacing').value = '3';
           }
 
@@ -2615,6 +2337,55 @@
         scheduleSheetRender();
       });
 
+      document.getElementById('input-sheet-margin-top')?.addEventListener('input', (e) => {
+        AppState.sheetMarginTopMm = Math.max(0, parseFloat(e.target.value) || 0);
+        autoPreserveSetting({ sheetMarginTopMm: AppState.sheetMarginTopMm });
+        scheduleSheetRender();
+      });
+
+      // Name & Date on Photo
+      const inputPhotoText = document.getElementById('input-photo-text');
+      inputPhotoText?.addEventListener('input', (e) => {
+        const person = getActivePerson();
+        if (!person) return;
+        person.captionText = e.target.value;
+        person.canvasCache = null;
+        updateCropCaptionOverlay();
+        scheduleSheetRender();
+      });
+
+      document.getElementById('btn-insert-today-date')?.addEventListener('click', () => {
+        const person = getActivePerson();
+        if (!person || !inputPhotoText) return;
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const dateStr = `DOO: ${day}/${month}/${year}`;
+
+        if (!inputPhotoText.value.trim()) {
+          inputPhotoText.value = (person.name && !person.name.startsWith('Person ') && !person.name.startsWith('Photo ')) 
+            ? `${person.name.toUpperCase()}\n${dateStr}` 
+            : dateStr;
+        } else if (!inputPhotoText.value.includes(dateStr)) {
+          inputPhotoText.value = inputPhotoText.value.trim() + '\n' + dateStr;
+        }
+        person.captionText = inputPhotoText.value;
+        person.canvasCache = null;
+        updateCropCaptionOverlay();
+        scheduleSheetRender();
+      });
+
+      document.getElementById('btn-clear-photo-text')?.addEventListener('click', () => {
+        const person = getActivePerson();
+        if (!person || !inputPhotoText) return;
+        inputPhotoText.value = '';
+        person.captionText = '';
+        person.canvasCache = null;
+        updateCropCaptionOverlay();
+        scheduleSheetRender();
+      });
+
       document.getElementById('input-photo-spacing')?.addEventListener('input', (e) => {
         AppState.photoSpacingMm = Math.max(0, parseFloat(e.target.value) || 0);
         autoPreserveSetting({ photoSpacingMm: AppState.photoSpacingMm });
@@ -2634,17 +2405,20 @@
       });
 
       document.getElementById('btn-reset-spacing')?.addEventListener('click', () => {
-        AppState.topMarginMm = null; // top margin follows sheet margin again
         const person = getActivePerson();
         if (person && person.presetKey === 'a4_6per_row') {
           AppState.sheetMarginMm = 2.57;
+          AppState.sheetMarginTopMm = 10;
           AppState.photoSpacingMm = 2.57;
           document.getElementById('input-sheet-margin').value = '2.57';
+          document.getElementById('input-sheet-margin-top').value = '10';
           document.getElementById('input-photo-spacing').value = '2.57';
         } else {
           AppState.sheetMarginMm = 10;
+          AppState.sheetMarginTopMm = 10;
           AppState.photoSpacingMm = 3;
           document.getElementById('input-sheet-margin').value = '10';
+          document.getElementById('input-sheet-margin-top').value = '10';
           document.getElementById('input-photo-spacing').value = '3';
         }
         AppState.showCutGuides = true;
@@ -2877,39 +2651,7 @@
     }
 
     // Decode Image File safely
-    // HEIC/HEIF support: most browsers (Chrome, Edge, Firefox) cannot decode HEIC natively,
-    // so a small converter is loaded on demand only when needed.
-    let heic2anyPromise = null;
-    function loadHeic2Any() {
-      if (window.heic2any) return Promise.resolve(window.heic2any);
-      if (!heic2anyPromise) {
-        heic2anyPromise = new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-          s.onload = () => resolve(window.heic2any);
-          s.onerror = () => { heic2anyPromise = null; reject(new Error('Could not load HEIC converter')); };
-          document.head.appendChild(s);
-        });
-      }
-      return heic2anyPromise;
-    }
-
-    async function decodeImageFile(file) {
-      try {
-        return await decodeImageFileRaw(file); // JPG, JPEG, PNG, WebP, and HEIC on Safari
-      } catch (firstErr) {
-        const name = (file.name || '').toLowerCase();
-        const type = (file.type || '').toLowerCase();
-        const looksHeic = /\.(heic|heif)$/.test(name) || type.includes('heic') || type.includes('heif');
-        if (!looksHeic) throw firstErr;
-        const convert = await loadHeic2Any();
-        let out = await convert({ blob: file, toType: 'image/jpeg', quality: 0.95 });
-        if (Array.isArray(out)) out = out[0];
-        return decodeImageFileRaw(out);
-      }
-    }
-
-    function decodeImageFileRaw(file) {
+    function decodeImageFile(file) {
       return new Promise((resolve, reject) => {
         let url = '';
         try {
@@ -3102,13 +2844,16 @@
         syncCopiesUI();
       }
 
-      syncCaptionInputs(person);
-
       // Revert Background Button visibility
       const btnRevertBg = document.getElementById('btn-revert-bg');
       if (btnRevertBg) {
         btnRevertBg.classList.toggle('hidden', !person.originalPhotoUrl);
       }
+
+      // Sync Photo Name / Date Text
+      const inputPhotoText = document.getElementById('input-photo-text');
+      if (inputPhotoText) inputPhotoText.value = person.captionText || '';
+      updateCropCaptionOverlay();
 
       // Initialize or Update Cropper.js
       initCropperForPerson(person);
@@ -3169,17 +2914,20 @@
             } else {
               updateFaceGuideOverlay();
             }
+            updateCropCaptionOverlay();
           },
           cropend() {
             person.cropData = cropperInstance.getData();
             person.canvasCache = null;
             updateFaceGuideOverlay();
+            updateCropCaptionOverlay();
             scheduleSheetRender();
           },
           zoom() {
             person.cropData = cropperInstance?.getData();
             person.canvasCache = null;
             updateFaceGuideOverlay();
+            updateCropCaptionOverlay();
             scheduleSheetRender();
           }
         });
@@ -3211,6 +2959,32 @@
       } else {
         overlay.classList.remove('hidden');
       }
+    }
+
+    function updateCropCaptionOverlay() {
+      const cropBox = document.querySelector('.cropper-crop-box');
+      let captionOverlay = document.getElementById('crop-caption-overlay');
+      const person = getActivePerson();
+      const hasText = !!(person && person.captionText && person.captionText.trim());
+
+      if (!hasText) {
+        if (captionOverlay) captionOverlay.classList.add('hidden');
+        return;
+      }
+
+      if (!captionOverlay) {
+        captionOverlay = document.createElement('div');
+        captionOverlay.id = 'crop-caption-overlay';
+        captionOverlay.className = 'absolute bottom-0 inset-x-0 bg-white/95 text-slate-900 border-t border-slate-300 font-mono text-[9px] font-bold text-center py-0.5 px-1 pointer-events-none select-none z-20 flex flex-col items-center justify-center shadow-xs';
+      }
+
+      if (cropBox && captionOverlay.parentElement !== cropBox) {
+        cropBox.appendChild(captionOverlay);
+      }
+
+      const lines = person.captionText.split('\n').map(l => l.trim()).filter(Boolean);
+      captionOverlay.innerHTML = lines.map(l => `<div class="truncate max-w-full leading-tight">${escapeHtml(l)}</div>`).join('');
+      captionOverlay.classList.remove('hidden');
     }
 
     function applyPresetToCropper(person) {
@@ -3803,6 +3577,7 @@
         ...source,
         id: generateId(),
         name: `${source.name} (Copy)`,
+        captionText: source.captionText || '',
         cropData: source.cropData ? { ...source.cropData } : null,
         canvasCache: null
       };
@@ -3856,6 +3631,9 @@
       document.getElementById('active-person-name').textContent = 'No Photo Selected';
       document.getElementById('active-person-meta').textContent = 'Select a photo from Tab 1';
       document.getElementById('active-person-thumb').innerHTML = '<i data-lucide="user" class="w-5 h-5 text-slate-400"></i>';
+      const inputPhotoText = document.getElementById('input-photo-text');
+      if (inputPhotoText) inputPhotoText.value = '';
+      updateCropCaptionOverlay();
       initLucide();
       updateUI();
       scheduleSheetRender();
@@ -3895,17 +3673,18 @@
 
       const pDim = getPersonDimensions(person);
       const margin = AppState.sheetMarginMm;
+      const marginTop = (AppState.sheetMarginTopMm !== undefined && AppState.sheetMarginTopMm !== null)
+        ? AppState.sheetMarginTopMm
+        : margin;
       const spacing = AppState.photoSpacingMm;
 
-      const capTopMargin = getTopMarginMm();
-      const capExtra = getCaptionExtraMm([person]);
       const usableWidth = paper.width - (2 * margin);
-      const usableHeight = paper.height - capTopMargin - margin;
+      const usableHeight = paper.height - (marginTop + margin);
 
-      if (usableWidth < pDim.width || usableHeight < (pDim.height + capExtra)) return 0;
+      if (usableWidth < pDim.width || usableHeight < pDim.height) return 0;
 
       const cols = Math.floor((usableWidth + spacing) / (pDim.width + spacing));
-      const rows = Math.floor((usableHeight + spacing) / (pDim.height + capExtra + spacing));
+      const rows = Math.floor((usableHeight + spacing) / (pDim.height + spacing));
 
       return Math.max(0, cols * rows);
     }
@@ -3937,6 +3716,9 @@
     function calculateFullLayout() {
       const paper = getActivePaperDimensions();
       const margin = AppState.sheetMarginMm;
+      const marginTop = (AppState.sheetMarginTopMm !== undefined && AppState.sheetMarginTopMm !== null)
+        ? AppState.sheetMarginTopMm
+        : margin;
       const spacing = AppState.photoSpacingMm;
       const items = buildLayoutItemsList();
 
@@ -3956,24 +3738,19 @@
       const pDim = getPersonDimensions(refPerson);
 
       const usableWidth = paper.width - (2 * margin);
-      const topMargin = getTopMarginMm();
-      const captionExtra = getCaptionExtraMm(items);
-      const rowHeightMm = pDim.height + captionExtra; // photo height + optional caption bar
-      const usableHeight = paper.height - topMargin - margin;
+      const usableHeight = paper.height - (marginTop + margin);
 
       const cols = Math.max(1, Math.floor((usableWidth + spacing) / (pDim.width + spacing)));
-      const rows = Math.max(1, Math.floor((usableHeight + spacing) / (rowHeightMm + spacing)));
+      const rows = Math.max(1, Math.floor((usableHeight + spacing) / (pDim.height + spacing)));
       const capacityPerSheet = cols * rows;
 
-      // Centering offset calculations
+      // Centering offset calculations: Top margin sets row 1 position directly
       let startX = margin;
-      let startY = topMargin;
+      let startY = marginTop;
 
       if (AppState.centerGrid) {
         const gridTotalWidth = (cols * pDim.width) + ((cols - 1) * spacing);
-        const gridTotalHeight = (rows * rowHeightMm) + ((rows - 1) * spacing);
         startX = Math.max(margin, (paper.width - gridTotalWidth) / 2);
-        startY = Math.max(topMargin, topMargin + (usableHeight - gridTotalHeight) / 2);
       }
 
       // Pack into sheets
@@ -3992,16 +3769,14 @@
         const row = Math.floor(slotIndex / cols);
 
         const xMm = startX + (col * (pDim.width + spacing));
-        const yMm = startY + (row * (rowHeightMm + spacing));
+        const yMm = startY + (row * (pDim.height + spacing));
 
-        const itemCaption = getCaptionSettings(person);
         currentSheet.push({
           person,
           xMm,
           yMm,
           widthMm: pDim.width,
-          heightMm: pDim.height,
-          captionBarMm: itemCaption.text ? itemCaption.barMm : 0
+          heightMm: pDim.height
         });
       });
 
@@ -4138,9 +3913,64 @@
       // Draw onto target
       ctx.drawImage(offCanvas, 0, 0);
 
+      // 2.5 Render Bottom White Bar & Name / Date Text (if specified)
+      if (person.captionText && person.captionText.trim()) {
+        const rawLines = person.captionText.split('\n').map(l => l.trim()).filter(Boolean);
+        if (rawLines.length > 0) {
+          // Calculate bar height proportionally (between 12% and 18% of target height)
+          const barHeightRatio = rawLines.length === 1 ? 0.13 : Math.min(0.22, 0.10 + rawLines.length * 0.05);
+          const barHeightPx = Math.round(targetHeightPx * barHeightRatio);
+          const barY = targetHeightPx - barHeightPx;
+
+          // Fill solid white bar
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, barY, targetWidthPx, barHeightPx);
+
+          // Subtle hairline top separator
+          ctx.strokeStyle = '#cbd5e1';
+          ctx.lineWidth = Math.max(1, Math.round(targetDpi / 300));
+          ctx.beginPath();
+          ctx.moveTo(0, barY);
+          ctx.lineTo(targetWidthPx, barY);
+          ctx.stroke();
+
+          // Text formatting
+          ctx.fillStyle = '#000000';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          // Base font size
+          let baseFontSize = rawLines.length === 1 
+            ? Math.round(barHeightPx * 0.48) 
+            : Math.round(barHeightPx / (rawLines.length + 0.65));
+          baseFontSize = Math.max(8, baseFontSize);
+
+          // Measure and ensure text fits within width
+          ctx.font = `bold ${baseFontSize}px "Plus Jakarta Sans", Arial, sans-serif`;
+          const maxLineWidth = targetWidthPx - Math.round(16 * (targetDpi / 300));
+          let finalFontSize = baseFontSize;
+          for (const line of rawLines) {
+            let lineW = ctx.measureText(line).width;
+            while (lineW > maxLineWidth && finalFontSize > 6) {
+              finalFontSize--;
+              ctx.font = `bold ${finalFontSize}px "Plus Jakarta Sans", Arial, sans-serif`;
+              lineW = ctx.measureText(line).width;
+            }
+          }
+
+          ctx.font = `bold ${finalFontSize}px "Plus Jakarta Sans", Arial, sans-serif`;
+
+          // Center lines vertically inside the white bar
+          const lineStep = barHeightPx / (rawLines.length + 1);
+          rawLines.forEach((line, idx) => {
+            const lineY = barY + lineStep * (idx + 1);
+            ctx.fillText(line, targetWidthPx / 2, lineY);
+          });
+        }
+      }
+
       // 3. Render Inset Border (Measured in physical mm!)
-      // With a caption bar, the border is drawn around photo + bar together (see drawCaptionBar)
-      if (person.borderThicknessMm > 0 && !getCaptionSettings(person).text) {
+      if (person.borderThicknessMm > 0) {
         const borderPx = (person.borderThicknessMm / MM_PER_INCH) * targetDpi;
         ctx.lineWidth = borderPx;
         ctx.strokeStyle = person.borderColor || '#000000';
@@ -4184,7 +4014,7 @@
           const x = mmToPx(item.xMm, targetDpi);
           const y = mmToPx(item.yMm, targetDpi);
           const w = mmToPx(item.widthMm, targetDpi);
-          const h = mmToPx(item.heightMm + (item.captionBarMm || 0), targetDpi); // photo + caption bar
+          const h = mmToPx(item.heightMm, targetDpi);
           const ext = mmToPx(2.5, targetDpi); // extend cut mark 2.5mm beyond edges
 
           // Corner tick marks
@@ -4215,7 +4045,6 @@
         const h = mmToPx(item.heightMm, targetDpi);
 
         ctx.drawImage(photoCanvas, x, y, w, h);
-        drawCaptionBar(ctx, item, x, y, w, h, targetDpi);
       }
 
       return destinationCanvas;
@@ -4238,8 +4067,6 @@
       const targetPxW = mmToPx(paper.width, PRINT_DPI);
       const targetPxH = mmToPx(paper.height, PRINT_DPI);
       document.getElementById('display-resolution-label').textContent = `${targetPxW} × ${targetPxH} px @ ${PRINT_DPI} DPI`;
-
-      syncTopMarginInput();
 
       // Update Capacity Labels
       document.getElementById('capacity-photos-fit').textContent = `${layout.photosPerSheet} photos / sheet`;
