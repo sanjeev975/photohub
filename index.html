@@ -11,31 +11,36 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="referrer" content="same-origin" />
   <meta name="robots" content="index,follow" />
+  <!-- Optional bot protection: paste your Cloudflare Turnstile SITE key here (public key, safe to commit). Leave empty to disable. -->
   <meta name="turnstile-sitekey" content="" />
 
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
 
+  <!-- Third-party libraries: exact versions pinned, locked down by the Content-Security-Policy in vercel.json -->
   <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <!-- Compiled Tailwind + app styles (no runtime CDN compiler) -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
 
-  <!-- CDN Warning -->
+  <!-- Fallback Alert if CDNs fail -->
   <div id="cdn-warning-banner" class="hidden bg-amber-500 text-white text-xs font-medium px-4 py-2 text-center">
     Notice: External libraries (jsPDF or Cropper.js) could not be loaded from CDN. Standard image processing fallbacks are active.
   </div>
 
-  <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3 flex items-center justify-between gap-6">
+  <!-- Top Bar: Brand & Clear All only -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3.5 flex items-center justify-between gap-8">
+    <!-- Brand / Wordmark -->
     <div class="flex items-center gap-3 shrink-0">
-      <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md">
+      <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
         <i data-lucide="camera" class="w-5 h-5"></i>
       </div>
       <div>
@@ -43,15 +48,17 @@
         <p class="text-[11px] text-slate-500 font-medium whitespace-nowrap">Studio Print & Export Engine</p>
       </div>
     </div>
+
+    <!-- Action: Clear All only -->
     <div class="flex items-center gap-2.5 shrink-0">
-      <button type="button" id="btn-clear-all" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg transition-colors whitespace-nowrap cursor-pointer">
+      <button type="button" id="btn-clear-all" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-md transition-colors whitespace-nowrap cursor-pointer">
         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
         <span>Clear All</span>
       </button>
     </div>
   </header>
 
-  <!-- Print Safety Banner -->
+  <!-- Persistent Print Safety Alert Banner -->
   <aside class="bg-indigo-950 text-indigo-100 px-4 py-2.5 text-xs border-b border-indigo-900 flex items-center justify-between gap-4">
     <div class="flex items-center gap-2.5 mx-auto max-w-5xl">
       <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-400 text-slate-950 font-black text-xs shrink-0">!</span>
@@ -64,86 +71,89 @@
     </button>
   </aside>
 
-  <!-- Main Workspace -->
-  <main class="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-4 lg:p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+  <!-- Main Application Workspace -->
+  <main class="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- LEFT SIDEBAR: Controls & Photo Library (Columns 1-5 on desktop) -->
     <section class="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
 
-      <!-- Defaults Card -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 overflow-hidden">
-          <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+      <!-- My Default Settings Quick Status & Action Card -->
+      <div class="bg-gradient-to-r from-indigo-50/90 via-slate-50 to-purple-50/80 border border-indigo-200/90 rounded-xl p-2.5 sm:px-3 shadow-xs flex items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 overflow-hidden">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <i data-lucide="bookmark-check" class="w-4 h-4"></i>
           </div>
           <div class="truncate">
             <div class="flex items-center gap-1.5">
               <span class="font-bold text-slate-900 text-xs">My Default:</span>
-              <span id="sidebar-defaults-pill" class="text-indigo-700 font-semibold text-[11px] truncate">4 Copies · Indian (35×45mm)</span>
+              <span id="sidebar-defaults-pill" class="text-indigo-800 font-bold text-[11px] truncate">4 Copies · Indian (35×45mm)</span>
             </div>
-            <div class="flex items-center gap-1.5 mt-0.5">
-              <span class="inline-flex items-center text-[10px] bg-emerald-50 text-emerald-700 font-semibold px-1.5 py-0.5 rounded-md border border-emerald-200">Preserved</span>
-              <span class="text-[10px] text-slate-500 truncate">Applies to next photos</span>
+            <div class="flex items-center gap-1.5">
+              <span class="inline-flex items-center text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded border border-emerald-300">Preserved</span>
+              <span class="text-[10px] text-slate-500 truncate">Applies automatically to next photos</span>
             </div>
           </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" id="btn-quick-save-defaults" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-lg text-[11px] flex items-center gap-1 shadow-sm transition-all cursor-pointer" title="Save current settings as your default for all next photos">
+          <button type="button" id="btn-quick-save-defaults" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-md text-[11px] flex items-center gap-1 shadow-2xs transition-all cursor-pointer" title="Save current settings as your default for all next photos">
             <i data-lucide="save" class="w-3.5 h-3.5"></i>
             <span>Set Default</span>
           </button>
-          <button type="button" id="btn-open-defaults-modal" class="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors" title="Manage Default Settings">
+          <button type="button" id="btn-open-defaults-modal" class="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-white rounded-md transition-colors" title="Manage Default Settings">
             <i data-lucide="settings" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
 
-      <!-- Tabs -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-1.5 flex items-center gap-1 shadow-sm">
-        <button type="button" class="tab-btn flex-1 py-2.5 px-2 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 bg-indigo-600 text-white shadow-sm" data-tab="tab-photos">
+      <!-- Navigation Tabs for Sidebar Sections on Mobile/Desktop -->
+      <div class="bg-white rounded-xl border border-slate-200 p-1.5 flex items-center gap-1 shadow-sm">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-indigo-600 text-white shadow-sm" data-tab="tab-photos">
           <i data-lucide="users" class="w-4 h-4"></i>
           <span>1. Photos (<span id="photo-count-badge">0</span>/12)</span>
         </button>
-        <button type="button" class="tab-btn flex-1 py-2.5 px-2 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-xl transition-all flex items-center justify-center gap-1.5" data-tab="tab-crop">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-all flex items-center justify-center gap-1.5" data-tab="tab-crop">
           <i data-lucide="crop" class="w-4 h-4"></i>
           <span>2. Crop & Edit</span>
         </button>
-        <button type="button" class="tab-btn flex-1 py-2.5 px-2 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-xl transition-all flex items-center justify-center gap-1.5" data-tab="tab-layout">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-all flex items-center justify-center gap-1.5" data-tab="tab-layout">
           <i data-lucide="grid" class="w-4 h-4"></i>
           <span>3. Sheet Layout</span>
         </button>
       </div>
 
-      <!-- TAB 1: Photos -->
+      <!-- TAB 1: Photo Library & Upload -->
       <div id="tab-photos" class="tab-content flex flex-col gap-4">
-        <div id="drop-zone" class="bg-white rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-500 p-6 text-center transition-all cursor-pointer group shadow-sm relative overflow-hidden">
+        <!-- Drag & Drop Upload Zone -->
+        <div id="drop-zone" class="bg-white rounded-xl border-2 border-dashed border-slate-300 hover:border-indigo-500 p-6 text-center transition-all cursor-pointer group shadow-sm block relative overflow-hidden">
+          <!-- Full-area invisible native file input: ANY click anywhere on the drop zone directly triggers native file browser dialog without iframe or label bugs! -->
           <input type="file" id="file-input" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Click or drop photos to upload" />
           
-          <div class="w-14 h-14 rounded-2xl bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center mb-3 transition-colors pointer-events-none">
-            <i data-lucide="upload-cloud" class="w-7 h-7"></i>
+          <div class="w-12 h-12 rounded-full bg-indigo-50 group-hover:bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center mb-3 transition-colors pointer-events-none">
+            <i data-lucide="upload-cloud" class="w-6 h-6"></i>
           </div>
           <h2 class="text-sm font-semibold text-slate-900 mb-1 pointer-events-none">Upload Portrait Photographs</h2>
-          <p class="text-xs text-slate-500 mb-3 pointer-events-none">Drag & drop files here or click anywhere to browse</p>
+          <p class="text-xs text-slate-500 mb-3 pointer-events-none">Drag &amp; drop files here or click anywhere to browse</p>
           <div class="flex items-center justify-center gap-2 text-[11px] text-slate-400 pointer-events-none">
-            <span>JPG, PNG, HEIC, WebP</span>
+            <span>JPG, JPEG, PNG, HEIC, WebP</span>
             <span>·</span>
             <span>Up to 12 people</span>
             <span>·</span>
-            <span>Max 25MB</span>
+            <span>Max 25MB each</span>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-3 relative z-20">
-            <button type="button" id="btn-browse-trigger" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
+            <button type="button" id="btn-browse-trigger" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-md shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
               <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
               <span>Browse Files</span>
             </button>
-            <button type="button" id="btn-sample-trigger" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5">
+            <button type="button" id="btn-sample-trigger" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-md transition-colors cursor-pointer flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i>
               <span>Load Sample Photo</span>
             </button>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+        <!-- Library Container / Entries List -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
           <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
             <div class="flex items-center gap-2">
               <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">People In Library</h3>
@@ -155,24 +165,27 @@
             </button>
           </div>
 
-          <div id="library-empty-state" class="py-10 text-center text-slate-400">
-            <i data-lucide="image" class="w-9 h-9 mx-auto mb-2 text-slate-300"></i>
+          <!-- Empty State -->
+          <div id="library-empty-state" class="py-8 text-center text-slate-400">
+            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
             <p class="text-xs font-medium text-slate-600">No photos uploaded yet</p>
             <p class="text-[11px] text-slate-400 mt-0.5">Upload a photo above to start cropping and arranging</p>
           </div>
 
+          <!-- People Card List -->
           <div id="people-list" class="space-y-2 max-h-[460px] overflow-y-auto pr-1">
             <!-- Rendered dynamically -->
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: Crop & Edit -->
+      <!-- TAB 2: Photo Crop Editor & Adjustments -->
       <div id="tab-crop" class="tab-content hidden flex flex-col gap-4">
 
-        <div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex items-center justify-between shadow-sm">
+        <!-- Selected Person Header Card -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3.5 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <div id="active-person-thumb" class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+            <div id="active-person-thumb" class="w-9 h-9 rounded-md bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
               <i data-lucide="user" class="w-5 h-5 text-slate-400"></i>
             </div>
             <div class="truncate">
@@ -190,43 +203,55 @@
           </button>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Interactive Crop Workspace Container -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Crop Workspace</h3>
-            <div class="flex items-center gap-1 text-[11px] font-mono text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">
+            <div class="flex items-center gap-1 text-[11px] font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
               <span id="crop-dimension-label">35 × 45 mm</span>
             </div>
           </div>
 
-          <div class="relative w-full h-[320px] bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center checker-pattern">
+          <!-- Interactive Viewport Canvas Area -->
+          <div class="relative w-full h-[320px] bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center checker-pattern">
             <img id="cropper-image" class="max-w-full max-h-full block opacity-0" alt="Crop target" />
+            
+            <!-- Fallback Canvas if Cropper.js fails -->
             <canvas id="custom-crop-canvas" class="hidden absolute inset-0 w-full h-full"></canvas>
 
-            <div id="bg-remove-status" class="hidden absolute top-2.5 left-2.5 z-20 bg-slate-900/90 text-white text-[11px] font-medium px-3 py-1.5 rounded-full border border-indigo-400/50 shadow-md flex items-center gap-2">
+            <!-- Background Removal Processing Status Badge -->
+            <div id="bg-remove-status" class="hidden absolute top-2.5 left-2.5 z-20 bg-slate-900/90 backdrop-blur-xs text-white text-[11px] font-medium px-3 py-1.5 rounded-full border border-indigo-400/50 shadow-md flex items-center gap-2">
               <i data-lucide="loader-2" class="w-3.5 h-3.5 text-indigo-400 animate-spin"></i>
               <span id="bg-remove-status-text">Cleaning background to pure white...</span>
             </div>
 
+            <!-- Optional Face Alignment Guide SVG Overlay -->
             <svg id="face-guide-overlay" class="face-guide-layer hidden w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <!-- Central vertical line -->
               <line x1="50" y1="0" x2="50" y2="100" stroke="#38bdf8" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.85" />
+              <!-- Top of Crown line (~15% from top) -->
               <line x1="15" y1="15" x2="85" y2="15" stroke="#fbbf24" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.9" />
               <text x="86" y="17" fill="#fbbf24" font-size="3.5" font-family="sans-serif" font-weight="600">Crown</text>
+              <!-- Eye-level line (~45% from top) -->
               <line x1="10" y1="45" x2="90" y2="45" stroke="#34d399" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.9" />
               <text x="91" y="47" fill="#34d399" font-size="3.5" font-family="sans-serif" font-weight="600">Eyes</text>
+              <!-- Chin line (~78% from top) -->
               <line x1="15" y1="78" x2="85" y2="78" stroke="#f87171" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.9" />
               <text x="86" y="80" fill="#f87171" font-size="3.5" font-family="sans-serif" font-weight="600">Chin</text>
+              <!-- Head Oval Reference -->
               <ellipse cx="50" cy="46" rx="26" ry="32" fill="none" stroke="#38bdf8" stroke-width="0.9" stroke-dasharray="3,3" opacity="0.8" />
             </svg>
 
+            <!-- Empty placeholder if no image -->
             <div id="cropper-placeholder" class="text-center text-slate-400 p-4">
-              <i data-lucide="image-off" class="w-8 h-8 mx-auto mb-2 text-slate-500"></i>
+              <i data-lucide="image-off" class="w-8 h-8 mx-auto mb-2 text-slate-400"></i>
               <p class="text-xs font-medium text-slate-300">No photograph loaded in editor</p>
               <div class="mt-3 flex items-center justify-center gap-2">
-                <button type="button" id="btn-upload-in-editor" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
+                <button type="button" id="btn-upload-in-editor" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-md shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
                   <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
                   <span>Browse Photo</span>
                 </button>
-                <button type="button" id="btn-load-sample-in-editor" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1">
+                <button type="button" id="btn-load-sample-in-editor" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-md transition-colors cursor-pointer flex items-center gap-1">
                   <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
                   <span>Load Sample</span>
                 </button>
@@ -234,37 +259,41 @@
             </div>
           </div>
 
+          <!-- Crop Toolbar Controls with Remove Background -->
           <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
             <div class="flex items-center gap-1.5 flex-wrap">
-              <button type="button" id="btn-remove-bg" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer select-none" title="Clean up photo background automatically and make it pure white for passport compliance">
+              <!-- Remove Background Primary Action Button -->
+              <button type="button" id="btn-remove-bg" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer select-none" title="Clean up photo background automatically and make it pure white for passport compliance">
                 <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
                 <span id="btn-remove-bg-label">Remove Background</span>
               </button>
 
-              <button type="button" id="btn-revert-bg" class="hidden inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 text-xs border border-slate-200 font-medium transition-colors cursor-pointer select-none" title="Revert to original photo background">
+              <!-- Revert Background Button (Visible after removal) -->
+              <button type="button" id="btn-revert-bg" class="hidden inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md hover:bg-slate-100 text-slate-700 text-xs border border-slate-200 font-medium transition-colors cursor-pointer select-none" title="Revert to original photo background">
                 <i data-lucide="undo-2" class="w-3.5 h-3.5 text-slate-500"></i>
                 <span>Original BG</span>
               </button>
 
               <div class="h-4 w-px bg-slate-200 mx-0.5"></div>
 
-              <button type="button" id="btn-crop-zoom-in" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 border border-slate-200" title="Zoom In">
+              <button type="button" id="btn-crop-zoom-in" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-700 border border-slate-200" title="Zoom In">
                 <i data-lucide="zoom-in" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-crop-zoom-out" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 border border-slate-200" title="Zoom Out">
+              <button type="button" id="btn-crop-zoom-out" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-700 border border-slate-200" title="Zoom Out">
                 <i data-lucide="zoom-out" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-rotate-ccw" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 border border-slate-200" title="Rotate 90° CCW">
+              <button type="button" id="btn-rotate-ccw" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-700 border border-slate-200" title="Rotate 90° CCW">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-rotate-cw" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 border border-slate-200" title="Rotate 90° CW">
+              <button type="button" id="btn-rotate-cw" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-700 border border-slate-200" title="Rotate 90° CW">
                 <i data-lucide="rotate-cw" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-crop-reset" class="px-2 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 text-xs border border-slate-200 font-medium" title="Reset Crop">
+              <button type="button" id="btn-crop-reset" class="px-2 py-1.5 rounded-md hover:bg-slate-100 text-slate-700 text-xs border border-slate-200 font-medium" title="Reset Crop">
                 Reset
               </button>
             </div>
 
+            <!-- Aspect Ratio Lock & Face Guide -->
             <div class="flex items-center gap-2.5 flex-wrap">
               <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-slate-700 select-none" title="Lock aspect ratio to preset dimensions">
                 <input type="checkbox" id="toggle-lock-ratio" checked class="w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
@@ -277,6 +306,7 @@
             </div>
           </div>
 
+          <!-- Preset Dimensions Selector -->
           <div class="space-y-1.5 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between">
               <label class="text-xs font-semibold text-slate-700">Preset Dimensions</label>
@@ -285,8 +315,8 @@
                 <span>Set as Default Preset</span>
               </button>
             </div>
-            <select id="select-preset" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-900">
-              <option value="a4_6per_row" selected>✓ A4 6 Photos/Row (equal Margins) - 3.2x4.114cm</option>
+            <select id="select-preset" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-900">
+              <option value="a4_6per_row" selected>✓ A4 6 Photos/Row (Equal Margins) - 3.2x4.114cm</option>
               <option value="35x45">Indian Passport / Visa (35 × 45 mm)</option>
               <option value="custom">Custom Dimensions (User-defined mm)</option>
               <optgroup label="Other Standard Dimensions">
@@ -297,14 +327,15 @@
             </select>
           </div>
 
-          <div id="custom-dimension-inputs" class="hidden grid grid-cols-2 gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+          <!-- Custom Dimensions Input (Visible when 'custom' selected) -->
+          <div id="custom-dimension-inputs" class="hidden grid grid-cols-2 gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
             <div>
               <label class="text-[11px] font-semibold text-slate-600">Width (mm)</label>
-              <input type="number" id="custom-width-mm" value="35" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500" />
+              <input type="number" id="custom-width-mm" value="35" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-slate-300 rounded focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div>
               <label class="text-[11px] font-semibold text-slate-600">Height (mm)</label>
-              <input type="number" id="custom-height-mm" value="45" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500" />
+              <input type="number" id="custom-height-mm" value="45" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-slate-300 rounded focus:ring-2 focus:ring-indigo-500" />
             </div>
           </div>
 
@@ -313,8 +344,8 @@
           </p>
         </div>
 
-        <!-- Image Adjustments -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Image Adjustments & Color Balance -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Image Adjustments</h3>
             <button type="button" id="btn-reset-adjustments" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium">
@@ -322,6 +353,7 @@
             </button>
           </div>
 
+          <!-- Brightness Slider -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-600">Brightness</span>
@@ -330,6 +362,7 @@
             <input type="range" id="slider-brightness" min="50" max="150" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
           </div>
 
+          <!-- Contrast Slider -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-600">Contrast</span>
@@ -338,19 +371,20 @@
             <input type="range" id="slider-contrast" min="50" max="150" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
           </div>
 
+          <!-- Background Handling & Compliance -->
           <div class="pt-2 border-t border-slate-100 space-y-2">
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-800 font-semibold flex items-center gap-1.5">
                 <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
                 <span>Background Compliance</span>
               </span>
-              <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded-md border border-emerald-200">Pure White Standard</span>
+              <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200">Pure White Standard</span>
             </div>
             <p class="text-[11px] text-slate-500 leading-snug">
               Official passport/visa regulations require a plain, shadowless pure white background. Click below to automatically clean and whiten your backdrop. Your photo is sent over an encrypted connection to a background-removal service and is not stored by this site; if the service is unavailable, on-device AI is used instead.
             </p>
             <div class="flex items-center gap-2 pt-0.5">
-              <button type="button" id="btn-remove-bg-card" class="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-xl text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none">
+              <button type="button" id="btn-remove-bg-card" class="flex-1 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-semibold rounded-lg text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none">
                 <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
                 <span>Clean &amp; Replace with Pure White</span>
               </button>
@@ -362,46 +396,50 @@
           </div>
         </div>
 
-        <!-- Border Settings -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Border Settings Section -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Border Settings</h3>
+
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Border Thickness</label>
-              <select id="select-border-thickness" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
+              <select id="select-border-thickness" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
                 <option value="0">None (0.0 mm)</option>
                 <option value="0.3" selected>Thin (0.3 mm)</option>
                 <option value="0.6">Medium (0.6 mm)</option>
                 <option value="1.0">Thick (1.0 mm)</option>
               </select>
             </div>
+
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Border Color</label>
               <div class="flex items-center gap-1.5">
-                <select id="select-border-color" class="flex-1 text-xs bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
+                <select id="select-border-color" class="flex-1 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
                   <option value="#000000" selected>Black (#000000)</option>
                   <option value="#D1D5DB">Light Gray (#D1D5DB)</option>
                   <option value="custom">Custom Color</option>
                 </select>
-                <input type="color" id="input-custom-border-color" value="#000000" class="w-8 h-8 rounded-lg border border-slate-300 cursor-pointer p-0.5 bg-white" title="Pick custom color" />
+                <input type="color" id="input-custom-border-color" value="#000000" class="w-8 h-8 rounded border border-slate-300 cursor-pointer p-0.5 bg-white" title="Pick custom color" />
               </div>
             </div>
           </div>
           <p class="text-[11px] text-slate-400">Borders are drawn within the exact physical millimeter boundaries and scale seamlessly to 300 DPI.</p>
         </div>
 
-        <!-- Name & Date -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Photo Name & Date Strip (Bottom White Bar) -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
               <i data-lucide="type" class="w-3.5 h-3.5 text-indigo-600"></i>
               <span>Name &amp; Date on Photo</span>
             </h3>
-            <span class="text-[10px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded-md border border-slate-200">Bottom White Bar</span>
+            <span class="text-[10px] bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded border border-slate-200">Bottom White Bar</span>
           </div>
+          
           <p class="text-[11px] text-slate-500 leading-snug">
             Add candidate name, date of photo (DOP), or custom text on a compliant solid white strip at the bottom of the photo. Does not alter physical photo dimensions.
           </p>
+
           <div class="space-y-2">
             <div>
               <div class="flex items-center justify-between mb-1">
@@ -416,7 +454,7 @@
                   </button>
                 </div>
               </div>
-              <textarea id="input-photo-text" rows="2" maxlength="200" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-slate-400 placeholder:font-sans" placeholder="e.g.&#10;NAME: JOHN DOE&#10;DOP: 21/10/2026"></textarea>
+              <textarea id="input-photo-text" rows="2" maxlength="200" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-slate-400 placeholder:font-sans" placeholder="e.g.&#10;NAME: JOHN DOE&#10;DOP: 21/10/2026"></textarea>
             </div>
             <div class="flex items-center justify-between text-[11px] text-slate-400">
               <span>Renders cleanly at bottom of image within existing dimensions</span>
@@ -425,42 +463,47 @@
         </div>
       </div>
 
-      <!-- TAB 3: Sheet Layout -->
+      <!-- TAB 3: Sheet Layout & Print Settings -->
       <div id="tab-layout" class="tab-content hidden flex flex-col gap-4">
 
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Paper Size & Orientation -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Paper Specification</h3>
+
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Paper Size</label>
-              <select id="select-paper-size" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
+              <select id="select-paper-size" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
                 <option value="A4" selected>A4 (210 × 297 mm)</option>
                 <option value="4x6">4 × 6 inch (101.6 × 152.4 mm)</option>
               </select>
             </div>
+
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Orientation</label>
-              <select id="select-paper-orientation" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
+              <select id="select-paper-orientation" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500">
                 <option value="portrait" selected>Portrait</option>
                 <option value="landscape">Landscape</option>
               </select>
             </div>
           </div>
 
+          <!-- Layout Mode Selection -->
           <div class="pt-2 border-t border-slate-100">
             <label class="text-[11px] font-semibold text-slate-600 mb-1.5 block">Sheet Arrangement Mode</label>
             <div class="grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
+              <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
                 <input type="radio" name="layout-mode" value="single" checked class="text-indigo-600 focus:ring-indigo-500" />
                 <span class="font-medium text-slate-800">Fill with One Person</span>
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
+              <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
                 <input type="radio" name="layout-mode" value="mixed" class="text-indigo-600 focus:ring-indigo-500" />
                 <span class="font-medium text-slate-800">Multi-Person Mixed</span>
               </label>
             </div>
           </div>
 
+          <!-- Single Mode Controls: Quick Presets & Stepper -->
           <div id="single-mode-controls" class="space-y-2.5 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between">
               <label class="text-[11px] font-semibold text-slate-700 block">Number of Copies</label>
@@ -473,57 +516,80 @@
               </div>
             </div>
 
+            <!-- Stepper with [-] and [+] and Row Buttons -->
             <div class="flex items-center gap-2">
-              <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
-                <button type="button" id="btn-copy-minus" class="w-8 h-8 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 text-slate-800 font-black text-sm flex items-center justify-center transition-colors select-none" title="Decrease copies (-1)">−</button>
+              <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white shadow-xs">
+                <button type="button" id="btn-copy-minus" class="w-8 h-8 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 text-slate-800 font-black text-sm flex items-center justify-center transition-colors select-none" title="Decrease copies (-1)">
+                  −
+                </button>
                 <input type="number" id="input-custom-copies" min="1" max="100" value="4" class="w-14 h-8 text-center text-xs font-mono font-bold text-slate-900 border-x border-slate-200 py-1 focus:outline-none tabular-nums" />
-                <button type="button" id="btn-copy-plus" class="w-8 h-8 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 text-slate-800 font-black text-sm flex items-center justify-center transition-colors select-none" title="Increase copies (+1)">+</button>
+                <button type="button" id="btn-copy-plus" class="w-8 h-8 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 text-slate-800 font-black text-sm flex items-center justify-center transition-colors select-none" title="Increase copies (+1)">
+                  +
+                </button>
               </div>
+
+              <!-- Quick Row +/- Buttons -->
               <div class="flex items-center gap-1">
-                <button type="button" id="btn-minus-row" class="px-2 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors" title="Delete 1 full row (-6 photos)">−6 Row</button>
-                <button type="button" id="btn-add-row" class="px-2 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors" title="Add 1 full row (+6 photos)">+6 Row</button>
+                <button type="button" id="btn-minus-row" class="px-2 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-md transition-colors" title="Delete 1 full row (-6 photos)">
+                  −6 Row
+                </button>
+                <button type="button" id="btn-add-row" class="px-2 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-md transition-colors" title="Add 1 full row (+6 photos)">
+                  +6 Row
+                </button>
               </div>
-              <button type="button" id="btn-fill-max" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 ml-auto whitespace-nowrap">Fill Max</button>
+
+              <button type="button" id="btn-fill-max" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 ml-auto whitespace-nowrap">
+                Fill Max
+              </button>
             </div>
 
-            <div class="grid grid-cols-6 gap-1.5">
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-indigo-600 bg-indigo-50 text-indigo-700" data-copies="4">4</button>
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="6">6</button>
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="8">8</button>
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="12">12</button>
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="24">24</button>
-              <button type="button" class="btn-copy-preset py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="36">36</button>
+            <!-- Quick Copies Presets (Default 4 Copies) -->
+            <div class="grid grid-cols-6 gap-1">
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-indigo-600 bg-indigo-50 text-indigo-700" data-copies="4">4</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="6">6</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="8">8</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="12">12</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="24">24</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-semibold rounded border border-slate-200 hover:bg-slate-50 text-slate-700" data-copies="36">36</button>
             </div>
           </div>
 
+          <!-- Mixed Mode Controls: Per-Person Quantity List -->
           <div id="mixed-mode-controls" class="hidden space-y-2 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between text-[11px] font-semibold text-slate-600">
               <span>Person Copies Allocation</span>
               <span id="mixed-total-count" class="font-mono text-indigo-700">Total: 0</span>
             </div>
-            <div id="mixed-people-allocation-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+            <div id="mixed-people-allocation-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
+        <!-- Margins, Spacing & Cutting Guides -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Spacing & Margins</h3>
-            <button type="button" id="btn-reset-spacing" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium">Optimal Defaults</button>
+            <button type="button" id="btn-reset-spacing" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium">
+              Optimal Defaults
+            </button>
           </div>
+
           <div class="grid grid-cols-3 gap-2.5">
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Side Margins (mm)">Side Margin (mm)</label>
-              <input type="number" id="input-sheet-margin" min="0" max="50" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-200 rounded-xl font-mono tabular-nums" />
+              <input type="number" id="input-sheet-margin" min="0" max="50" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Top Margin (mm)">Top Margin (mm)</label>
-              <input type="number" id="input-sheet-margin-top" min="0" max="100" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-200 rounded-xl font-mono tabular-nums" />
+              <input type="number" id="input-sheet-margin-top" min="0" max="100" step="0.5" value="10" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
             <div>
               <label class="text-[11px] font-semibold text-slate-600 mb-1 block truncate" title="Photo Gap / Spacing (mm)">Photo Gap (mm)</label>
-              <input type="number" id="input-photo-spacing" min="0" max="25" step="0.5" value="3" class="w-full text-xs p-2 border border-slate-200 rounded-xl font-mono tabular-nums" />
+              <input type="number" id="input-photo-spacing" min="0" max="25" step="0.5" value="3" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
           </div>
+
           <div class="flex items-center justify-between pt-2 border-t border-slate-100">
             <div>
               <span class="text-xs font-medium text-slate-800 block">Cutting Guidelines</span>
@@ -531,6 +597,7 @@
             </div>
             <input type="checkbox" id="toggle-cut-guides" checked class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
           </div>
+
           <div class="flex items-center justify-between pt-2 border-t border-slate-100">
             <div>
               <span class="text-xs font-medium text-slate-800 block">Center Grid on Sheet</span>
@@ -540,7 +607,8 @@
           </div>
         </div>
 
-        <div id="capacity-info-box" class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs space-y-1">
+        <!-- Capacity & Multi-Sheet Information Box -->
+        <div id="capacity-info-box" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs space-y-1">
           <div class="flex items-center justify-between font-semibold text-slate-800">
             <span>Sheet Capacity:</span>
             <span id="capacity-photos-fit" class="font-mono text-indigo-700">0 photos / sheet</span>
@@ -549,19 +617,23 @@
             <span>Grid Layout:</span>
             <span id="capacity-grid-cols-rows" class="font-mono text-slate-700">0 cols × 0 rows</span>
           </div>
-          <div id="overflow-warning" class="hidden text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-2 mt-2 leading-relaxed text-[11px]">
+          <div id="overflow-warning" class="hidden text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mt-2 leading-relaxed text-[11px]">
             ⚠️ Requested copies exceed 1 sheet. Multiple sheets (<span id="total-sheets-count">2</span>) will be generated.
           </div>
         </div>
       </div>
+
     </section>
 
-    <!-- RIGHT WORKSPACE -->
+    <!-- RIGHT MAIN WORKSPACE: Interactive Sheet Preview & Export Center (Columns 6-12) -->
     <section class="lg:col-span-7 xl:col-span-8 flex flex-col gap-4">
 
-      <div class="bg-white rounded-2xl border border-slate-200 p-3 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+      <!-- Workspace Top Control Strip -->
+      <div class="bg-white rounded-xl border border-slate-200 p-3 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        
+        <!-- Sheet Metrics & Specs -->
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <div class="w-7 h-7 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
             <i data-lucide="file-text" class="w-4 h-4"></i>
           </div>
           <div>
@@ -574,64 +646,94 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-xl p-1">
+        <!-- Live Quick Copies Stepper (Add more with + or decrease with -) -->
+        <div class="flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-lg p-1">
           <span class="text-[11px] font-semibold text-slate-600 px-1">Copies:</span>
-          <button type="button" id="btn-quick-minus" class="w-6 h-6 rounded-lg bg-white hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none" title="Decrease photo copies (-1)">−</button>
+          <button type="button" id="btn-quick-minus" class="w-6 h-6 rounded bg-white hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center transition-colors shadow-2xs select-none" title="Decrease photo copies (-1)">
+            −
+          </button>
           <span id="quick-copies-display" class="font-mono font-bold text-xs text-indigo-700 px-1.5 min-w-[24px] text-center tabular-nums">4</span>
-          <button type="button" id="btn-quick-plus" class="w-6 h-6 rounded-lg bg-white hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none" title="Add photo copy (+1)">+</button>
-          <button type="button" id="btn-quick-add-row" class="text-[10px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-1.5 py-0.5 rounded-md border border-indigo-200 transition-colors whitespace-nowrap" title="Add 1 full row (+6 photos)">+6 Row</button>
+          <button type="button" id="btn-quick-plus" class="w-6 h-6 rounded bg-white hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center transition-colors shadow-2xs select-none" title="Add photo copy (+1)">
+            +
+          </button>
+          <button type="button" id="btn-quick-add-row" class="text-[10px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-1.5 py-0.5 rounded border border-indigo-200 transition-colors whitespace-nowrap" title="Add 1 full row (+6 photos)">
+            +6 Row
+          </button>
         </div>
 
+        <!-- Zoom & Pagination Controls -->
         <div class="flex items-center gap-2">
-          <div id="page-nav-controls" class="hidden items-center gap-1 bg-slate-100 p-0.5 rounded-xl border border-slate-200 mr-2">
-            <button type="button" id="btn-prev-page" class="p-1 rounded-lg text-slate-600 hover:text-slate-900 disabled:opacity-30" title="Previous Sheet">
+          <!-- Page Nav (if multiple sheets) -->
+          <div id="page-nav-controls" class="hidden items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 mr-2">
+            <button type="button" id="btn-prev-page" class="p-1 rounded text-slate-600 hover:text-slate-900 disabled:opacity-30" title="Previous Sheet">
               <i data-lucide="chevron-left" class="w-4 h-4"></i>
             </button>
             <span class="text-[11px] font-mono px-2 text-slate-700 font-semibold" id="page-indicator">1 / 1</span>
-            <button type="button" id="btn-next-page" class="p-1 rounded-lg text-slate-600 hover:text-slate-900 disabled:opacity-30" title="Next Sheet">
+            <button type="button" id="btn-next-page" class="p-1 rounded text-slate-600 hover:text-slate-900 disabled:opacity-30" title="Next Sheet">
               <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
           </div>
-          <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-xl border border-slate-200">
-            <button type="button" id="btn-zoom-out" class="p-1.5 rounded-lg text-slate-600 hover:text-slate-900" title="Zoom Out"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+
+          <!-- Zoom Buttons -->
+          <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+            <button type="button" id="btn-zoom-out" class="p-1.5 rounded text-slate-600 hover:text-slate-900" title="Zoom Out">
+              <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+            </button>
             <span id="zoom-level-text" class="text-[11px] font-mono px-1.5 text-slate-700 font-medium tabular-nums">Fit</span>
-            <button type="button" id="btn-zoom-in" class="p-1.5 rounded-lg text-slate-600 hover:text-slate-900" title="Zoom In"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
-            <button type="button" id="btn-zoom-fit" class="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 text-xs font-semibold px-2" title="Fit to Screen">Fit</button>
-            <button type="button" id="btn-zoom-100" class="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 text-xs font-semibold px-2" title="100% Scale">100%</button>
+            <button type="button" id="btn-zoom-in" class="p-1.5 rounded text-slate-600 hover:text-slate-900" title="Zoom In">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            </button>
+            <button type="button" id="btn-zoom-fit" class="p-1.5 rounded text-slate-600 hover:text-slate-900 text-xs font-semibold px-2" title="Fit to Screen">
+              Fit
+            </button>
+            <button type="button" id="btn-zoom-100" class="p-1.5 rounded text-slate-600 hover:text-slate-900 text-xs font-semibold px-2" title="100% Scale">
+              100%
+            </button>
           </div>
         </div>
+
       </div>
 
-      <div id="preview-viewport" class="relative w-full h-[580px] xl:h-[640px] bg-slate-200/80 rounded-2xl border border-slate-300 overflow-hidden flex items-center justify-center p-4 checker-pattern select-none cursor-grab active:cursor-grabbing">
+      <!-- Interactive Canvas Sheet Viewport Container -->
+      <div id="preview-viewport" class="relative w-full h-[580px] xl:h-[640px] bg-slate-200/80 rounded-xl border border-slate-300 overflow-hidden flex items-center justify-center p-4 checker-pattern select-none cursor-grab active:cursor-grabbing">
+        
+        <!-- The Live Sheet Canvas (scaled for crisp rendering) -->
         <div id="canvas-wrapper" class="relative transition-transform duration-75 origin-center">
           <canvas id="sheet-preview-canvas" class="bg-white shadow-2xl rounded-sm block border border-slate-300"></canvas>
         </div>
-        <div id="rendering-spinner" class="hidden absolute inset-0 bg-white/80 flex flex-col items-center justify-center gap-3 z-30">
+
+        <!-- Overlay Loading Spinner during high-res generation -->
+        <div id="rendering-spinner" class="hidden absolute inset-0 bg-white/80 backdrop-blur-xs flex flex-col items-center justify-center gap-3 z-30">
           <div class="w-9 h-9 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           <p id="spinner-msg" class="text-xs font-semibold text-slate-800">Rendering 300 DPI Sheet...</p>
         </div>
+
+        <!-- Empty State Prompt inside canvas viewport if no photo -->
         <div id="canvas-empty-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 text-center p-6 z-20">
-          <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
-            <i data-lucide="layout-grid" class="w-8 h-8"></i>
+          <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+            <i data-lucide="layout-grid" class="w-7 h-7"></i>
           </div>
           <h3 class="text-base font-bold text-slate-900 mb-1">Your Print Sheet Will Appear Here</h3>
-          <p class="text-xs text-slate-500 max-w-sm mb-5">
+          <p class="text-xs text-slate-500 max-w-sm mb-4">
             Upload your portrait photo or click the sample button to generate real-time preview and 300 DPI exports.
           </p>
           <div class="flex items-center gap-3">
-            <button type="button" id="btn-load-sample-canvas" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors flex items-center gap-1.5">
+            <button type="button" id="btn-load-sample-canvas" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-4 h-4"></i>
               <span>Load Sample Portrait</span>
             </button>
-            <button type="button" id="btn-upload-canvas" class="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center gap-1.5">
+            <button type="button" id="btn-upload-canvas" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5">
               <i data-lucide="folder-open" class="w-4 h-4"></i>
               <span>Browse From Computer</span>
             </button>
           </div>
         </div>
+
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <!-- Export Action Center (Primary Actions) -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        
         <div class="flex items-center gap-3 text-xs text-slate-600">
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></div>
           <div>
@@ -639,45 +741,61 @@
             <span class="text-slate-400 block text-[11px]">Ready for commercial & home photo printers</span>
           </div>
         </div>
+
+        <!-- Export Buttons Group -->
         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
-          <button type="button" id="btn-export-single" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center gap-1.5" title="Export current cropped photo as single 300 DPI file">
+          
+          <!-- Single Photo Export (For Online Visas/Passports) -->
+          <button type="button" id="btn-export-single" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1.5" title="Export current cropped photo as single 300 DPI file">
             <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
             <span>Single Photo</span>
           </button>
-          <button type="button" id="btn-export-png" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center gap-1.5" title="Export entire sheet as lossless PNG">
+
+          <!-- Export PNG -->
+          <button type="button" id="btn-export-png" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1.5" title="Export entire sheet as lossless PNG">
             <i data-lucide="image" class="w-4 h-4 text-slate-500"></i>
             <span>Export PNG</span>
           </button>
-          <button type="button" id="btn-export-jpeg" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center gap-1.5" title="Export entire sheet as high-res JPEG">
+
+          <!-- Export JPEG -->
+          <button type="button" id="btn-export-jpeg" class="px-3.5 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1.5" title="Export entire sheet as high-res JPEG">
             <i data-lucide="file-image" class="w-4 h-4 text-slate-500"></i>
             <span>Export JPEG</span>
           </button>
-          <button type="button" id="btn-export-pdf" class="px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-all flex items-center gap-2" title="Generate print-ready PDF at exact physical dimensions">
+
+          <!-- Export PDF (Primary Action) -->
+          <button type="button" id="btn-export-pdf" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-all flex items-center gap-2" title="Generate print-ready PDF at exact physical dimensions">
             <i data-lucide="download" class="w-4 h-4"></i>
             <span>Export PDF (300 DPI)</span>
           </button>
+
         </div>
+
       </div>
+
     </section>
+
   </main>
 
-  <!-- All Modals (IDs + structure preserved) -->
+  <!-- MODAL: Dimension Specifications Guide -->
   <dialog id="modal-specs" class="rounded-2xl p-0 max-w-xl w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <div class="p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
             <i data-lucide="book-open" class="w-4 h-4"></i>
           </div>
           <h2 class="text-base font-bold text-slate-900">Standard Passport & Visa Dimensions</h2>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-md">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
+
       <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
         <p>The table below summarizes official physical dimensions by country. Always verify latest rules with official consular services.</p>
-        <div class="border border-slate-200 rounded-xl overflow-hidden">
+
+        <div class="border border-slate-200 rounded-lg overflow-hidden">
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold">
               <tr>
@@ -728,29 +846,35 @@
           </table>
         </div>
       </div>
+
       <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button type="button" class="btn-close-modal px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-xl">Close Guide</button>
+        <button type="button" class="btn-close-modal px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg">
+          Close Guide
+        </button>
       </div>
     </div>
   </dialog>
 
+  <!-- MODAL: Print Safety & Calibration Guide -->
   <dialog id="modal-print-guide" class="rounded-2xl p-0 max-w-lg w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <div class="p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+          <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
             <i data-lucide="printer" class="w-4 h-4"></i>
           </div>
           <h2 class="text-base font-bold text-slate-900">Printing Calibration Checklist</h2>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-md">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
+
       <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
-        <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200 font-medium">
+        <div class="p-3 bg-amber-50 text-amber-900 rounded-lg border border-amber-200 font-medium">
           ⚠️ Common mistake: Most printer dialogs default to "Fit to Printable Area" which shrinks passport photos by 3% to 6%, making them non-compliant.
         </div>
+
         <ol class="list-decimal pl-4 space-y-2">
           <li><strong>Scale Setting:</strong> Always choose <strong>100%</strong> or <strong>"Actual Size"</strong> in your browser or Adobe Acrobat print dialog.</li>
           <li><strong>Paper Matching:</strong> Ensure the paper loaded in the tray matches your chosen sheet format (A4 or 4×6 photo paper).</li>
@@ -758,12 +882,16 @@
           <li><strong>Ruler Verification:</strong> After printing, use a physical millimeter ruler to measure your printed photos. A 35×45mm photo must measure exactly 3.5cm wide by 4.5cm high.</li>
         </ol>
       </div>
+
       <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button type="button" class="btn-close-modal px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-xl">Understood, Close</button>
+        <button type="button" class="btn-close-modal px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg">
+          Understood, Close
+        </button>
       </div>
     </div>
   </dialog>
 
+  <!-- MODAL: Confirmation Dialog (Clear All) -->
   <dialog id="modal-confirm-clear" class="rounded-2xl p-0 max-w-sm w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <div class="p-6 flex flex-col gap-4 text-center">
       <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 mx-auto flex items-center justify-center">
@@ -774,41 +902,47 @@
         <p class="text-xs text-slate-500 mt-1">This will remove all uploaded photos and reset your sheets. Memory and temporary URLs will be freed immediately.</p>
       </div>
       <div class="flex items-center justify-center gap-3 pt-2">
-        <button type="button" class="btn-close-modal flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl">Cancel</button>
-        <button type="button" id="btn-confirm-clear-action" class="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl">Yes, Clear All</button>
+        <button type="button" class="btn-close-modal flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">
+          Cancel
+        </button>
+        <button type="button" id="btn-confirm-clear-action" class="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg">
+          Yes, Clear All
+        </button>
       </div>
     </div>
   </dialog>
 
+  <!-- MODAL: Rename Person Dialog (Replaces window.prompt for sandboxed iframes) -->
   <dialog id="modal-rename" class="rounded-2xl p-0 max-w-sm w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <form method="dialog" id="form-rename" class="p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
           </div>
           <h3 class="text-sm font-bold text-slate-900">Rename Person</h3>
         </div>
-        <button type="button" class="btn-close-modal p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+        <button type="button" class="btn-close-modal p-1 text-slate-400 hover:text-slate-600 rounded">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
       <div>
         <label class="text-xs font-semibold text-slate-700 block mb-1.5">Person / Photo Label</label>
-        <input type="text" id="input-rename-person" maxlength="60" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-900" placeholder="e.g. John Doe, Visa Photo" required />
+        <input type="text" id="input-rename-person" maxlength="60" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-900" placeholder="e.g. John Doe, Visa Photo" required />
       </div>
       <div class="flex items-center justify-end gap-2 pt-2">
-        <button type="button" class="btn-close-modal px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl">Cancel</button>
-        <button type="submit" id="btn-save-rename" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm">Save Name</button>
+        <button type="button" class="btn-close-modal px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Cancel</button>
+        <button type="submit" id="btn-save-rename" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm">Save Name</button>
       </div>
     </form>
   </dialog>
 
+  <!-- MODAL: My Saved Default Preferences -->
   <dialog id="modal-default-settings" class="rounded-2xl p-0 max-w-md w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <div class="p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
             <i data-lucide="bookmark-check" class="w-4 h-4"></i>
           </div>
           <div>
@@ -816,11 +950,13 @@
             <p class="text-[11px] text-slate-500 font-medium">Preserved &amp; auto-applied whenever you load or switch photos</p>
           </div>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+        <button type="button" class="btn-close-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-md">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
-      <div class="bg-indigo-50/70 border border-indigo-200 rounded-2xl p-3.5 space-y-2 text-xs">
+
+      <!-- Current Saved Summary Card -->
+      <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3.5 space-y-2 text-xs">
         <div class="flex items-center justify-between font-semibold text-indigo-950 border-b border-indigo-100 pb-1.5">
           <span>Current Preserved Configuration</span>
           <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Saved in Browser</span>
@@ -834,34 +970,45 @@
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Photo Spacing</span> <strong id="modal-default-spacing" class="text-slate-800 font-mono">3 mm</strong></div>
         </div>
       </div>
-      <label class="flex items-start gap-2.5 p-3 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs select-none">
+
+      <!-- Auto-Preserve Option Toggle -->
+      <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs select-none">
         <input type="checkbox" id="toggle-auto-preserve" checked class="mt-0.5 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
         <div>
           <span class="font-bold text-slate-800 block">Auto-Preserve settings as default</span>
           <span class="text-[11px] text-slate-500 leading-snug block">When you tweak copies, preset sizes, borders, or margins, automatically update your saved defaults for all next photos.</span>
         </div>
       </label>
+
+      <!-- Action Buttons -->
       <div class="flex flex-col gap-2 pt-2 border-t border-slate-100">
         <div class="flex items-center gap-2">
-          <button type="button" id="btn-save-current-as-defaults-modal" class="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+          <button type="button" id="btn-save-current-as-defaults-modal" class="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer">
             <i data-lucide="save" class="w-3.5 h-3.5"></i>
             <span>Save Current Settings as Default</span>
           </button>
-          <button type="button" id="btn-apply-defaults-to-photo" class="py-2 px-3 bg-white border border-slate-300 hover:bg-slate-50 active:scale-95 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Reset active photo to saved defaults">
+          <button type="button" id="btn-apply-defaults-to-photo" class="py-2 px-3 bg-white border border-slate-300 hover:bg-slate-50 active:scale-95 text-slate-700 text-xs font-semibold rounded-lg transition-all cursor-pointer" title="Reset active photo to saved defaults">
             Apply to Active Photo
           </button>
         </div>
         <div class="flex items-center justify-between pt-1">
-          <button type="button" id="btn-reset-factory-defaults" class="text-[11px] text-rose-600 hover:text-rose-800 font-medium cursor-pointer">Reset to Standard Defaults</button>
-          <button type="button" class="btn-close-modal px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer">Done</button>
+          <button type="button" id="btn-reset-factory-defaults" class="text-[11px] text-rose-600 hover:text-rose-800 font-medium cursor-pointer">
+            Reset to Standard Defaults
+          </button>
+          <button type="button" class="btn-close-modal px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer">
+            Done
+          </button>
         </div>
       </div>
     </div>
   </dialog>
 
+
+  <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
   <div id="turnstile-box" class="hidden fixed bottom-5 left-5 z-50"></div>
 
+  <!-- Application Script (ES6+ Vanilla JavaScript) -->
   <script src="app.js"></script>
 </body>
 </html>
