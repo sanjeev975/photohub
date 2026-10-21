@@ -117,9 +117,9 @@
     Notice: External libraries (jsPDF or Cropper.js) could not be loaded from CDN. Standard image processing fallbacks are active.
   </div>
 
-  <!-- Top Bar Contract: 3 Zones (Brand, Nav Links, 1 Primary Action) -->
+  <!-- Top Bar: Brand & Clear All only -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3.5 flex items-center justify-between gap-8">
-    <!-- Zone 1: Wordmark -->
+    <!-- Brand / Wordmark -->
     <div class="flex items-center gap-3 shrink-0">
       <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
         <i data-lucide="camera" class="w-5 h-5"></i>
@@ -130,43 +130,8 @@
       </div>
     </div>
 
-    <!-- Zone 2: Nav / Trust / Mode links -->
-    <nav class="hidden md:flex items-center gap-5 text-xs font-medium text-slate-600 shrink-0">
-      <button type="button" id="btn-open-my-defaults" class="hover:text-indigo-600 text-slate-700 transition-colors whitespace-nowrap flex items-center gap-1.5 py-1">
-        <i data-lucide="bookmark-check" class="w-3.5 h-3.5 text-indigo-600"></i>
-        <span>My Defaults (<strong id="nav-defaults-summary" class="font-semibold text-indigo-700">4 Copies · 35×45mm</strong>)</span>
-      </button>
-      <button type="button" id="btn-open-specs" class="hover:text-slate-900 transition-colors whitespace-nowrap flex items-center gap-1.5 py-1">
-        <i data-lucide="book-open" class="w-3.5 h-3.5 text-slate-400"></i>
-        <span>Dimension Specs</span>
-      </button>
-      <button type="button" id="btn-open-print-guide" class="hover:text-slate-900 transition-colors whitespace-nowrap flex items-center gap-1.5 py-1">
-        <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-400"></i>
-        <span>Print Calibration</span>
-      </button>
-      <button type="button" id="btn-open-api-modal" class="hover:text-indigo-600 text-slate-700 transition-colors whitespace-nowrap flex items-center gap-1.5 py-1" title="Configure Remove.bg API Key & Cloud AI">
-        <span class="relative flex h-2 w-2">
-          <span id="api-status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span id="api-status-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span>Remove.bg: <strong id="header-api-status" class="font-semibold text-emerald-700">Connected</strong></span>
-      </button>
-      <div class="flex items-center gap-1.5 text-slate-500 border-l border-slate-200 pl-3 py-1">
-        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
-        <span>Studio-grade secure</span>
-      </div>
-    </nav>
-
-    <!-- Zone 3: Primary Actions (Upload / Sample / Clear All) -->
+    <!-- Action: Clear All only -->
     <div class="flex items-center gap-2.5 shrink-0">
-      <button type="button" id="btn-header-upload" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow-sm transition-colors whitespace-nowrap cursor-pointer">
-        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-        <span>Browse Photos</span>
-      </button>
-      <button type="button" id="btn-quick-sample" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors whitespace-nowrap cursor-pointer">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i>
-        <span>Try Sample Photo</span>
-      </button>
       <button type="button" id="btn-clear-all" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-md transition-colors whitespace-nowrap cursor-pointer">
         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
         <span>Clear All</span>
@@ -1273,23 +1238,7 @@
       // Mode detection: either Vercel backend proxy or local browser key
       const isConfigured = cfg.enabled && (hasLocalKey || true); // Default Vercel endpoint ready
 
-      const headerStatus = document.getElementById('header-api-status');
-      if (headerStatus) {
-        if (hasLocalKey) {
-          headerStatus.textContent = 'Browser Key Active';
-          headerStatus.className = 'font-semibold text-emerald-700';
-        } else {
-          headerStatus.textContent = 'Vercel Secured';
-          headerStatus.className = 'font-semibold text-indigo-700';
-        }
-      }
 
-      const ping = document.getElementById('api-status-ping');
-      const dot = document.getElementById('api-status-dot');
-      if (ping && dot) {
-        ping.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75';
-        dot.className = 'relative inline-flex rounded-full h-2 w-2 bg-emerald-500';
-      }
 
 
 
@@ -1517,8 +1466,7 @@
       const pill = document.getElementById('sidebar-defaults-pill');
       if (pill) pill.textContent = summaryText;
 
-      const navSummary = document.getElementById('nav-defaults-summary');
-      if (navSummary) navSummary.textContent = summaryText;
+
 
       const modalCopies = document.getElementById('modal-default-copies');
       if (modalCopies) modalCopies.textContent = d.singleCopies.toString();
@@ -1836,7 +1784,6 @@
 
       // Explicit click triggers for all Browse/Upload buttons across the UI
       const browseButtonIds = [
-        'btn-header-upload',
         'btn-browse-trigger',
         'btn-add-more',
         'btn-upload-in-editor',
@@ -1920,7 +1867,7 @@
       });
 
       // Sample Photo Loaders
-      const sampleButtons = ['btn-quick-sample', 'btn-sample-trigger', 'btn-load-sample-in-editor', 'btn-load-sample-canvas'];
+      const sampleButtons = ['btn-sample-trigger', 'btn-load-sample-in-editor', 'btn-load-sample-canvas'];
       sampleButtons.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
@@ -1945,14 +1892,8 @@
       }
 
       // Modals: Specs & Print Guide & Default Settings
-      const btnSpecs = document.getElementById('btn-open-specs');
-      const modalSpecs = document.getElementById('modal-specs');
-      if (btnSpecs) btnSpecs.addEventListener('click', () => modalSpecs.showModal());
-
-      const btnPrintGuide = document.getElementById('btn-open-print-guide');
       const btnBannerGuide = document.getElementById('btn-banner-guide');
       const modalPrintGuide = document.getElementById('modal-print-guide');
-      if (btnPrintGuide) btnPrintGuide.addEventListener('click', () => modalPrintGuide.showModal());
       if (btnBannerGuide) btnBannerGuide.addEventListener('click', () => modalPrintGuide.showModal());
 
       // Remove.bg API Modal & Action Listeners
@@ -1963,7 +1904,7 @@
         modalApi?.showModal();
       };
 
-      document.getElementById('btn-open-api-modal')?.addEventListener('click', openApiModal);
+      
 
       // Toggle show/hide API key password text
       document.getElementById('btn-toggle-key-visibility')?.addEventListener('click', () => {
@@ -2057,7 +1998,7 @@
         modalDefaults?.showModal();
       };
 
-      document.getElementById('btn-open-my-defaults')?.addEventListener('click', openDefaultsModal);
+      
       document.getElementById('btn-open-defaults-modal')?.addEventListener('click', openDefaultsModal);
 
       document.getElementById('btn-quick-save-defaults')?.addEventListener('click', () => {
