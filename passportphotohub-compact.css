@@ -1,0 +1,271 @@
+/* PassportPhoto Hub — Compact Studio UI
+   Load AFTER styles.css. This is a presentation-only layer:
+   it does not change element IDs, JavaScript hooks, or application logic. */
+
+:root {
+  --pph-bg: #f5f7fb;
+  --pph-surface: #ffffff;
+  --pph-border: #e2e8f0;
+  --pph-border-strong: #cbd5e1;
+  --pph-text: #0f172a;
+  --pph-muted: #64748b;
+  --pph-primary: #4f46e5;
+  --pph-primary-hover: #4338ca;
+  --pph-radius: 10px;
+  --pph-shadow: 0 1px 2px rgb(15 23 42 / 4%), 0 2px 8px rgb(15 23 42 / 3%);
+  --pph-control-height: 32px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--pph-bg) !important;
+  color: var(--pph-text);
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid #818cf8 !important;
+  outline-offset: 2px;
+}
+
+/* Compact sticky header */
+header {
+  min-height: 58px;
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+  gap: 16px !important;
+  box-shadow: 0 1px 0 rgb(15 23 42 / 3%);
+}
+header h1 { font-size: 16px !important; line-height: 1.25; }
+header .w-9.h-9 { width: 34px !important; height: 34px !important; }
+header .gap-3 { gap: 9px !important; }
+
+/* Safety strip: compact but still prominent */
+body > aside:not(dialog aside) {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  font-size: 11px !important;
+}
+
+/* Main layout: tighter gutters and panel spacing */
+main {
+  gap: 14px !important;
+  padding: 14px !important;
+}
+main > section { gap: 12px !important; min-width: 0; }
+main .rounded-xl,
+main .rounded-2xl { border-radius: var(--pph-radius); }
+main .shadow-sm, main .shadow-xs, main .shadow-2xs {
+  box-shadow: var(--pph-shadow);
+}
+main .bg-white.border,
+main .bg-white.rounded-xl {
+  border-color: var(--pph-border);
+}
+
+/* Standardise cards without flattening special states */
+main section > div.bg-white.rounded-xl.border {
+  padding: 12px !important;
+}
+main section > div.bg-white.rounded-xl.border.p-4 {
+  padding: 12px !important;
+}
+main .gap-4 { gap: 12px !important; }
+main .gap-3 { gap: 9px !important; }
+
+/* Text hierarchy */
+main h2 { letter-spacing: -0.015em; }
+main h3 {
+  letter-spacing: .045em;
+  font-size: 10px !important;
+}
+main label { line-height: 1.35; }
+main p { line-height: 1.5; }
+main .text-xs { font-size: 11px !important; }
+main .text-\[11px\] { font-size: 10px !important; }
+main .text-\[10px\] { font-size: 9px !important; }
+
+/* Compact controls and buttons */
+button {
+  transition: color .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+main button:not(.tab-btn):not(#btn-copy-minus):not(#btn-copy-plus):not(#btn-quick-minus):not(#btn-quick-plus) {
+  line-height: 1.25;
+}
+main button.px-3\.5.py-2,
+main button.px-4.py-2,
+main button.px-5.py-2 { padding: 7px 10px !important; }
+main button.px-3.py-1\.5,
+main button.px-3\.5.py-1\.5,
+main button.px-2\.5.py-1\.5 { padding: 5px 9px !important; }
+main button.p-2 { padding: 6px !important; }
+main button.p-1\.5 { padding: 5px !important; }
+main button.rounded-lg { border-radius: 7px; }
+main button.rounded-md { border-radius: 6px; }
+main button svg, main button i[data-lucide] { flex-shrink: 0; }
+main button:active { transform: translateY(1px); }
+
+/* Tabs */
+.tab-btn {
+  min-height: 34px;
+  padding: 7px 9px !important;
+  border-radius: 7px !important;
+  gap: 6px !important;
+  white-space: nowrap;
+}
+.tab-btn svg { width: 14px; height: 14px; }
+main > section > .bg-white.rounded-xl.border.p-1\.5 {
+  padding: 4px !important;
+  gap: 3px !important;
+}
+
+/* Upload zone */
+#drop-zone {
+  padding: 20px 14px !important;
+  border-width: 1.5px;
+  border-radius: 10px;
+}
+#drop-zone > .w-12.h-12 {
+  width: 40px !important;
+  height: 40px !important;
+  margin-bottom: 9px !important;
+}
+#drop-zone > .w-12.h-12 svg { width: 20px; height: 20px; }
+#drop-zone h2 { font-size: 13px !important; }
+#drop-zone .mt-4 { margin-top: 12px !important; padding-top: 10px !important; }
+
+/* Inputs */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+select, textarea {
+  min-height: 30px;
+  border-color: var(--pph-border-strong);
+  border-radius: 6px !important;
+  font-size: 11px !important;
+}
+main input.p-2, main select.p-2, main textarea.p-2 { padding: 6px 8px !important; }
+main input[type="checkbox"], main input[type="radio"] {
+  accent-color: var(--pph-primary);
+}
+main input[type="range"] { min-height: 0; }
+main input[type="color"] { width: 30px !important; height: 30px !important; }
+main textarea { resize: vertical; }
+
+/* Library list and compact empty states */
+#library-empty-state { padding-top: 24px !important; padding-bottom: 24px !important; }
+#people-list { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+#people-list::-webkit-scrollbar { width: 6px; }
+#people-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+
+/* Cropper workspace */
+#cropper-image { max-width: 100%; }
+#tab-crop .h-\[320px\] { height: clamp(230px, 30vw, 320px) !important; }
+#tab-crop .checker-pattern { border: 1px solid #334155; }
+#btn-remove-bg, #btn-remove-bg-card { min-height: 31px; }
+#custom-dimension-inputs { gap: 8px; }
+
+/* Sheet preview — keep the preview visually dominant */
+#preview-viewport {
+  min-height: 380px;
+  height: clamp(420px, 62vh, 680px) !important;
+  padding: 14px !important;
+  border-radius: 10px;
+}
+#canvas-wrapper { max-width: 100%; max-height: 100%; }
+#sheet-preview-canvas { max-width: 100%; max-height: 100%; object-fit: contain; }
+#canvas-empty-overlay { border-radius: inherit; }
+#canvas-empty-overlay .w-14.h-14 {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+}
+#canvas-empty-overlay h3 { font-size: 15px !important; }
+
+/* Preview top toolbar */
+main > section.lg\:col-span-7 > .bg-white.rounded-xl.border {
+  padding: 10px 12px !important;
+}
+#page-nav-controls, #btn-zoom-out, #btn-zoom-in, #btn-zoom-fit, #btn-zoom-100 {
+  min-height: 27px;
+}
+#btn-quick-minus, #btn-quick-plus { width: 25px; height: 25px; }
+
+/* Export bar */
+#btn-export-single, #btn-export-png, #btn-export-jpeg {
+  min-height: 32px;
+  padding: 7px 10px !important;
+}
+#btn-export-pdf {
+  min-height: 34px;
+  padding: 8px 13px !important;
+  box-shadow: 0 2px 4px rgb(79 70 229 / 18%);
+}
+#btn-export-pdf:hover { box-shadow: 0 4px 10px rgb(79 70 229 / 22%); }
+
+/* Dialogs */
+dialog {
+  max-height: min(88vh, 800px);
+  overflow: auto;
+  border-radius: 14px !important;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 22%);
+}
+dialog > div, dialog form { padding: 18px !important; gap: 12px !important; }
+dialog h2 { font-size: 15px !important; }
+dialog table th, dialog table td { padding: 8px !important; }
+dialog::backdrop { background: rgb(15 23 42 / 52%); backdrop-filter: blur(3px); }
+#toast-container { right: 14px; bottom: 14px; }
+
+/* Ensure hidden utility states always remain hidden even if component rules change */
+.hidden { display: none !important; }
+
+/* Tablet */
+@media (max-width: 1023px) {
+  main { padding: 10px !important; gap: 12px !important; }
+  main > section { gap: 10px !important; }
+  #preview-viewport { height: clamp(360px, 60vh, 560px) !important; }
+  .tab-btn { font-size: 10px !important; padding: 7px 5px !important; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  header { padding: 8px 12px !important; min-height: 54px; }
+  header h1 { font-size: 14px !important; }
+  header p { font-size: 9px !important; }
+  header .w-9.h-9 { width: 30px !important; height: 30px !important; }
+  body > aside:not(dialog aside) { padding: 7px 10px !important; }
+  main { padding: 8px !important; gap: 10px !important; }
+  main > section { gap: 10px !important; }
+  main section > div.bg-white.rounded-xl.border,
+  main section > div.bg-white.rounded-xl.border.p-4 { padding: 10px !important; }
+  .tab-btn { flex-direction: column; gap: 3px !important; min-width: 0; white-space: normal; text-align: center; }
+  .tab-btn span { font-size: 9px; line-height: 1.25; }
+  #drop-zone { padding: 16px 10px !important; }
+  #drop-zone .mt-4 { flex-wrap: wrap; gap: 6px !important; }
+  #preview-viewport { min-height: 320px; height: 48vh !important; padding: 8px !important; }
+  #canvas-empty-overlay { padding: 12px !important; }
+  #canvas-empty-overlay > div:last-child { flex-wrap: wrap; gap: 7px !important; }
+  #canvas-empty-overlay button { padding: 7px 9px !important; }
+  #btn-export-pdf, #btn-export-single, #btn-export-png, #btn-export-jpeg {
+    justify-content: center;
+    flex: 1 1 calc(50% - 6px);
+  }
+  .grid.grid-cols-3 { gap: 6px !important; }
+  dialog { width: calc(100% - 20px) !important; max-width: none !important; }
+  dialog > div, dialog form { padding: 14px !important; }
+  dialog table { min-width: 520px; }
+  dialog .border.rounded-lg.overflow-hidden { overflow-x: auto; }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
