@@ -196,11 +196,13 @@
     /* Inputs */
     main input[type="number"],
     main input[type="text"],
+    main textarea,
     main select {
       border-radius: 10px !important;
       transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
     }
     main input:focus,
+    main textarea:focus,
     main select:focus,
     dialog input:focus,
     dialog select:focus {
@@ -659,16 +661,16 @@
           </div>
 
           <div>
-            <label for="input-caption-text" class="text-[11px] font-semibold text-slate-600 mb-1 block">Text under photo</label>
+            <label for="input-caption-text" class="text-[11px] font-semibold text-slate-600 mb-1 block">Text under photo (Enter = new line, up to 5 lines)</label>
             <div class="flex items-center gap-2">
-              <input type="text" id="input-caption-text" maxlength="60" placeholder="e.g. Rahul Sharma · 21/10/2026" class="flex-1 text-xs p-2 border border-slate-300 rounded-lg" />
+              <textarea id="input-caption-text" rows="3" maxlength="200" placeholder="Name&#10;Date" class="flex-1 text-xs p-2 border border-slate-300 rounded-lg resize-y leading-snug"></textarea>
               <button type="button" id="btn-caption-date" class="shrink-0 px-2.5 py-2 text-[11px] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg" title="Append today's date to the text">+ Today</button>
             </div>
           </div>
 
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="text-[11px] font-semibold text-slate-600 mb-1 block">Bar Height (mm)</label>
+              <label class="text-[11px] font-semibold text-slate-600 mb-1 block" title="The bar grows automatically if the text needs more room">Min Bar Height (mm)</label>
               <input type="number" id="input-caption-bar" min="3" max="25" step="0.5" value="6" class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono tabular-nums" />
             </div>
             <div>
@@ -1961,13 +1963,20 @@
     }
 
     function getCaptionSettings(p) {
-      const text = ((p && p.captionText) || '').trim();
+      const raw = (p && p.captionText) || '';
+      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0).slice(0, 5);
       const bar = parseFloat(p && p.captionBarMm);
       const font = parseFloat(p && p.captionFontPt);
+      const fontPt = font > 0 ? font : 9;
+      const minBar = bar > 0 ? bar : 6;
+      // Bar grows automatically so every line fits
+      const lineMm = (fontPt / 72) * MM_PER_INCH * 1.25;
+      const neededMm = lines.length * lineMm + 2;
       return {
-        text,
-        barMm: bar > 0 ? bar : 6,
-        fontPt: font > 0 ? font : 9,
+        text: lines.join('\n'),
+        lines,
+        barMm: lines.length ? Math.max(minBar, neededMm) : minBar,
+        fontPt,
         bold: !!(p && p.captionBold)
       };
     }
@@ -1991,19 +2000,38 @@
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(x, y + h, w, barPx);
 
+      // Fit the widest line inside the photo width
       let fontPx = (cs.fontPt / 72) * dpi;
       const weight = cs.bold ? '700' : '500';
       const family = '"Plus Jakarta Sans", Arial, sans-serif';
-      ctx.font = `${weight} ${fontPx}px ${family}`;
       const maxW = w * 0.94;
-      while (ctx.measureText(cs.text).width > maxW && fontPx > 4) {
+      const widest = () => Math.max(...cs.lines.map(l => ctx.measureText(l).width));
+      ctx.font = `${weight} ${fontPx}px ${family}`;
+      while (widest() > maxW && fontPx > 4) {
         fontPx -= 0.5;
         ctx.font = `${weight} ${fontPx}px ${family}`;
       }
+
+      // Draw each line, stacked and centered vertically inside the bar
+      const lineH = fontPx * 1.25;
+      const blockH = lineH * cs.lines.length;
+      const firstCenterY = y + h + (barPx - blockH) / 2 + lineH / 2;
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(cs.text, x + w / 2, y + h + barPx / 2);
+      cs.lines.forEach((line, i) => {
+        ctx.fillText(line, x + w / 2, firstCenterY + i * lineH);
+      });
+
+      // One border around the whole block (photo + caption bar)
+      const person = item.person;
+      if (person && person.borderThicknessMm > 0) {
+        const borderPx = (person.borderThicknessMm / MM_PER_INCH) * dpi;
+        ctx.lineWidth = borderPx;
+        ctx.strokeStyle = person.borderColor || '#000000';
+        ctx.setLineDash([]);
+        ctx.strokeRect(x + borderPx / 2, y + borderPx / 2, w - borderPx, h + barPx - borderPx);
+      }
       ctx.restore();
     }
 
@@ -2035,6 +2063,7 @@
         person.captionBarMm = parseFloat(document.getElementById('input-caption-bar').value) || 6;
         person.captionFontPt = parseFloat(document.getElementById('input-caption-font').value) || 9;
         person.captionBold = document.getElementById('toggle-caption-bold').checked;
+        person.canvasCache = null; // border placement depends on caption presence
         scheduleSheetRender();
       };
 
@@ -2052,7 +2081,7 @@
         const input = document.getElementById('input-caption-text');
         const d = new Date();
         const dateStr = [String(d.getDate()).padStart(2, '0'), String(d.getMonth() + 1).padStart(2, '0'), d.getFullYear()].join('/');
-        input.value = input.value.trim() ? `${input.value.trim()} · ${dateStr}` : dateStr;
+        input.value = input.value.trim() ? `${input.value.trim()}\n${dateStr}` : dateStr;
         onCaptionChange();
       });
 
@@ -4110,7 +4139,8 @@
       ctx.drawImage(offCanvas, 0, 0);
 
       // 3. Render Inset Border (Measured in physical mm!)
-      if (person.borderThicknessMm > 0) {
+      // With a caption bar, the border is drawn around photo + bar together (see drawCaptionBar)
+      if (person.borderThicknessMm > 0 && !getCaptionSettings(person).text) {
         const borderPx = (person.borderThicknessMm / MM_PER_INCH) * targetDpi;
         ctx.lineWidth = borderPx;
         ctx.strokeStyle = person.borderColor || '#000000';
