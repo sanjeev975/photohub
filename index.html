@@ -24,206 +24,27 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- ============================================================
-       Google Material 3 — Dark Theme Layer
-       Uses unique .pph-* classes so it does NOT depend on
-       Tailwind arbitrary values being present in styles.css.
-       ============================================================ -->
-  <style>
-    :root {
-      color-scheme: dark;
-      --pph-bg: #202124;
-      --pph-surface: #292a2d;
-      --pph-surface-2: #303134;
-      --pph-surface-3: #3c4043;
-      --pph-border: #444746;
-      --pph-border-2: #5f6368;
-      --pph-text: #e8eaed;
-      --pph-text-2: #9aa0a6;
-      --pph-text-3: #80868b;
-      --pph-primary: #8ab4f8;
-      --pph-primary-fill: #a8c7fa;
-      --pph-primary-fill-hover: #c2d7fc;
-      --pph-on-primary: #062e6f;
-      --pph-error: #f28b82;
-      --pph-error-bg: #4a1f1b;
-      --pph-error-border: #8c2f28;
-      --pph-success: #81c995;
-      --pph-success-bg: #1a3a28;
-      --pph-success-border: #3f6a52;
-      --pph-warning: #fdd663;
-      --pph-warning-bg: #3d2f10;
-      --pph-warning-border: #6b5320;
-      --pph-info-bg: #004a77;
-      --pph-info-text: #c2e7ff;
-    }
-
-    html, body { background-color: var(--pph-bg); color: var(--pph-text); }
-    ::selection { background-color: rgba(138,180,248,0.30); color: var(--pph-text); }
-
-    /* Surfaces */
-    .pph-card        { background-color: var(--pph-surface);   border: 1px solid var(--pph-border); }
-    .pph-card-sub    { background-color: var(--pph-surface-2); border: 1px solid var(--pph-border); }
-    .pph-card-elev   { background-color: var(--pph-surface-3); }
-    .pph-divider     { border-color: var(--pph-border); }
-    .pph-page        { background-color: var(--pph-bg); }
-
-    /* Text */
-    .pph-text   { color: var(--pph-text); }
-    .pph-text-2 { color: var(--pph-text-2); }
-    .pph-text-3 { color: var(--pph-text-3); }
-    .pph-link   { color: var(--pph-primary); }
-    .pph-link:hover { color: #a8c7fa; }
-
-    /* Icon tiles */
-    .pph-icon-primary { background-color: rgba(138,180,248,0.15); color: var(--pph-primary); }
-    .pph-icon-success { background-color: var(--pph-success-bg); color: var(--pph-success); }
-    .pph-icon-error   { background-color: var(--pph-error-bg);   color: var(--pph-error); }
-    .pph-icon-warning { background-color: var(--pph-warning-bg); color: var(--pph-warning); }
-    .pph-icon-brand   { background-color: var(--pph-primary-fill); color: var(--pph-on-primary); }
-
-    /* Buttons */
-    .pph-btn-primary {
-      background-color: var(--pph-primary-fill);
-      color: var(--pph-on-primary);
-      font-weight: 500;
-      transition: background-color .15s ease, transform .1s ease;
-    }
-    .pph-btn-primary:hover  { background-color: var(--pph-primary-fill-hover); }
-    .pph-btn-primary:active { transform: scale(.97); }
-    .pph-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
-
-    .pph-btn-tonal {
-      background-color: var(--pph-surface-2);
-      color: var(--pph-text);
-      border: 1px solid var(--pph-border-2);
-      font-weight: 500;
-      transition: background-color .15s ease;
-    }
-    .pph-btn-tonal:hover { background-color: var(--pph-surface-3); }
-
-    .pph-btn-ghost {
-      color: var(--pph-primary);
-      background: transparent;
-      font-weight: 500;
-      transition: background-color .15s ease;
-    }
-    .pph-btn-ghost:hover { background-color: var(--pph-surface-2); }
-
-    .pph-btn-danger {
-      color: var(--pph-error);
-      background: transparent;
-      border: 1px solid var(--pph-border-2);
-      font-weight: 500;
-      transition: background-color .15s ease, border-color .15s ease;
-    }
-    .pph-btn-danger:hover {
-      background-color: var(--pph-error-bg);
-      border-color: var(--pph-error-border);
-    }
-
-    .pph-btn-danger-fill {
-      background-color: var(--pph-error);
-      color: #3c0407;
-      font-weight: 500;
-      transition: background-color .15s ease;
-    }
-    .pph-btn-danger-fill:hover { background-color: #f6a59e; }
-
-    /* Inputs / selects / textareas */
-    .pph-input {
-      background-color: var(--pph-surface-2);
-      color: var(--pph-text);
-      border: 1px solid var(--pph-border-2);
-      transition: background-color .15s ease, border-color .15s ease;
-    }
-    .pph-input:hover { background-color: var(--pph-surface-3); }
-    .pph-input:focus {
-      background-color: var(--pph-surface-3);
-      border-color: var(--pph-primary);
-      outline: 2px solid var(--pph-primary);
-      outline-offset: -1px;
-    }
-    .pph-input::placeholder { color: var(--pph-text-3); }
-
-    /* Chips */
-    .pph-chip-success { background-color: var(--pph-success-bg); color: var(--pph-success); border: 1px solid var(--pph-success-border); }
-    .pph-chip-error   { background-color: var(--pph-error-bg);   color: var(--pph-error);   border: 1px solid var(--pph-error-border); }
-    .pph-chip-warning { background-color: var(--pph-warning-bg); color: var(--pph-warning); border: 1px solid var(--pph-warning-border); }
-    .pph-chip-info    { background-color: rgba(138,180,248,.12); color: var(--pph-primary); border: 1px solid rgba(138,180,248,.30); }
-
-    /* Banner */
-    .pph-banner { background-color: var(--pph-info-bg); color: var(--pph-info-text); }
-
-    /* Gradient default card */
-    .pph-gradient-card {
-      background: linear-gradient(90deg, #1a2942 0%, #292a2d 50%, #1a2942 100%);
-      border: 1px solid #2d4862;
-    }
-
-    /* Tabs */
-    .pph-tab-active   { background-color: var(--pph-primary-fill); color: var(--pph-on-primary); box-shadow: 0 1px 2px rgba(0,0,0,.35); }
-    .pph-tab-inactive { color: var(--pph-text-2); background: transparent; }
-    .pph-tab-inactive:hover { color: var(--pph-text); background-color: var(--pph-surface-2); }
-
-    /* Checker pattern — dark neutral */
-    .checker-pattern {
-      background-color: #181a1c !important;
-      background-image:
-        linear-gradient(45deg, #202124 25%, transparent 25%),
-        linear-gradient(-45deg, #202124 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #202124 75%),
-        linear-gradient(-45deg, transparent 75%, #202124 75%) !important;
-      background-size: 16px 16px !important;
-      background-position: 0 0, 0 8px, 8px -8px, -8px 0 !important;
-    }
-
-    /* Sliders / checkboxes */
-    input[type="range"] { accent-color: var(--pph-primary); }
-    input[type="checkbox"], input[type="radio"] { accent-color: var(--pph-primary); }
-
-    /* Empty overlay on canvas */
-    .pph-empty-overlay { background-color: rgba(32,33,36,.96); }
-
-    /* Modal backdrops */
-    dialog::backdrop { background-color: rgba(8,9,11,.65); }
-
-    /* Header translucent */
-    .pph-header { background-color: rgba(32,33,36,.94); border-bottom: 1px solid var(--pph-border); }
-
-    /* Legacy Tailwind color overrides — safety net if any old class slips in */
-    .bg-white                { background-color: var(--pph-surface) !important; }
-    .bg-slate-100            { background-color: var(--pph-surface-2) !important; }
-    .bg-slate-50             { background-color: var(--pph-surface-2) !important; }
-    .text-slate-900          { color: var(--pph-text) !important; }
-    .text-slate-800          { color: var(--pph-text) !important; }
-    .text-slate-700          { color: #c4c7c5 !important; }
-    .text-slate-600, .text-slate-500 { color: var(--pph-text-2) !important; }
-    .text-slate-400          { color: var(--pph-text-3) !important; }
-    .border-slate-200, .border-slate-300, .border-slate-100 { border-color: var(--pph-border) !important; }
-  </style>
 </head>
-<body class="pph-page pph-text min-h-screen flex flex-col antialiased">
+<body class="bg-[#f8f9fa] text-[#202124] min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900 antialiased">
 
-  <div id="cdn-warning-banner" class="hidden text-xs font-medium px-4 py-2 text-center" style="background-color:var(--pph-warning-bg); color:var(--pph-warning); border-bottom:1px solid var(--pph-warning-border)">
+  <div id="cdn-warning-banner" class="hidden bg-amber-400 text-[#202124] text-xs font-medium px-4 py-2 text-center">
     Notice: External libraries (jsPDF or Cropper.js) could not be loaded from CDN. Standard image processing fallbacks are active.
   </div>
 
   <!-- ============ HEADER ============ -->
-  <header class="pph-header sticky top-0 z-40 px-4 lg:px-8 py-3.5 flex items-center justify-between gap-8">
+  <header class="bg-white/95 backdrop-blur border-b border-[#dadce0] sticky top-0 z-40 px-4 lg:px-8 py-3 flex items-center justify-between gap-8">
     <div class="flex items-center gap-3 shrink-0">
-      <div class="pph-icon-brand w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
+      <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
         <i data-lucide="camera" class="w-5 h-5"></i>
       </div>
       <div>
-        <h1 class="text-lg font-semibold tracking-tight pph-text whitespace-nowrap">PassportPhoto Hub</h1>
-        <p class="text-[11px] pph-text-2 font-medium whitespace-nowrap">Studio Print &amp; Export Engine</p>
+        <h1 class="text-lg font-semibold tracking-tight text-[#202124] whitespace-nowrap">PassportPhoto Hub</h1>
+        <p class="text-[11px] text-[#5f6368] font-medium whitespace-nowrap">Studio Print &amp; Export Engine</p>
       </div>
     </div>
 
     <div class="flex items-center gap-2.5 shrink-0">
-      <button type="button" id="btn-clear-all" class="pph-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-full transition-colors whitespace-nowrap cursor-pointer">
+      <button type="button" id="btn-clear-all" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-[#d93025] hover:text-[#b3261e] hover:bg-red-50 border border-[#dadce0] hover:border-red-200 rounded-full transition-colors whitespace-nowrap cursor-pointer">
         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
         <span>Clear All</span>
       </button>
@@ -231,14 +52,14 @@
   </header>
 
   <!-- ============ SAFETY BANNER ============ -->
-  <aside class="pph-banner px-4 py-2.5 text-xs flex items-center justify-between gap-4">
+  <aside class="bg-blue-600 text-white px-4 py-2.5 text-xs flex items-center justify-between gap-4">
     <div class="flex items-center gap-2.5 mx-auto max-w-5xl">
-      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-black text-xs shrink-0" style="background-color:var(--pph-warning); color:#202124">!</span>
+      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-300 text-[#202124] font-black text-xs shrink-0">!</span>
       <p class="leading-snug">
-        <strong class="font-semibold text-white">Print Safety Rule:</strong> Print at <strong class="underline underline-offset-2" style="color:var(--pph-warning)">100% / Actual Size</strong>. Do NOT select "Fit to Page", "Scale to Fit", or "Borderless Stretch".
+        <strong class="text-white font-semibold">Print Safety Rule:</strong> Print at <strong class="text-amber-200 underline underline-offset-2">100% / Actual Size</strong>. Do NOT select "Fit to Page", "Scale to Fit", or "Borderless Stretch".
       </p>
     </div>
-    <button type="button" id="btn-banner-guide" class="hidden lg:inline-flex pph-link hover:text-white underline text-xs whitespace-nowrap shrink-0">
+    <button type="button" id="btn-banner-guide" class="hidden lg:inline-flex text-blue-100 hover:text-white underline text-xs whitespace-nowrap shrink-0">
       Read calibration instructions
     </button>
   </aside>
@@ -250,44 +71,44 @@
     <section class="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
 
       <!-- My Default Quick Status -->
-      <div class="pph-gradient-card rounded-2xl p-3 flex items-center justify-between gap-2 text-xs shadow-sm">
+      <div class="bg-gradient-to-r from-blue-50 via-white to-blue-50/40 border border-blue-100 rounded-2xl p-3 flex items-center justify-between gap-2 text-xs shadow-sm">
         <div class="flex items-center gap-2.5 overflow-hidden">
-          <div class="pph-icon-brand w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm">
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
             <i data-lucide="bookmark-check" class="w-4 h-4"></i>
           </div>
           <div class="truncate">
             <div class="flex items-center gap-1.5">
-              <span class="font-semibold pph-text text-xs">My Default:</span>
-              <span id="sidebar-defaults-pill" class="pph-link font-semibold text-[11px] truncate">4 Copies · Indian (35×45mm)</span>
+              <span class="font-semibold text-[#202124] text-xs">My Default:</span>
+              <span id="sidebar-defaults-pill" class="text-blue-700 font-semibold text-[11px] truncate">4 Copies · Indian (35×45mm)</span>
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="pph-chip-success inline-flex items-center text-[10px] font-semibold px-1.5 py-0.5 rounded-full">Preserved</span>
-              <span class="text-[10px] pph-text-2 truncate">Applies automatically to next photos</span>
+              <span class="inline-flex items-center text-[10px] bg-green-100 text-green-800 font-semibold px-1.5 py-0.2 rounded-full border border-green-200">Preserved</span>
+              <span class="text-[10px] text-[#5f6368] truncate">Applies automatically to next photos</span>
             </div>
           </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" id="btn-quick-save-defaults" class="pph-btn-primary px-3 py-1.5 rounded-full text-[11px] flex items-center gap-1 shadow-sm cursor-pointer" title="Save current settings as your default for all next photos">
+          <button type="button" id="btn-quick-save-defaults" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-medium rounded-full text-[11px] flex items-center gap-1 shadow-sm transition-all cursor-pointer" title="Save current settings as your default for all next photos">
             <i data-lucide="save" class="w-3.5 h-3.5"></i>
             <span>Set Default</span>
           </button>
-          <button type="button" id="btn-open-defaults-modal" class="p-1.5 pph-text-2 hover:pph-text rounded-full hover:bg-black/20 transition-colors" title="Manage Default Settings">
+          <button type="button" id="btn-open-defaults-modal" class="p-1.5 text-[#5f6368] hover:text-[#202124] hover:bg-white rounded-full transition-colors" title="Manage Default Settings">
             <i data-lucide="settings" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="pph-card rounded-2xl p-1.5 flex items-center gap-1 shadow-sm">
-        <button type="button" class="tab-btn pph-tab-active flex-1 py-2 px-3 text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5" data-tab="tab-photos">
+      <div class="bg-white rounded-2xl border border-[#dadce0] p-1.5 flex items-center gap-1 shadow-sm">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5 bg-blue-600 text-white shadow-sm" data-tab="tab-photos">
           <i data-lucide="users" class="w-4 h-4"></i>
           <span>1. Photos (<span id="photo-count-badge">0</span>/12)</span>
         </button>
-        <button type="button" class="tab-btn pph-tab-inactive flex-1 py-2 px-3 text-xs font-medium rounded-full transition-all flex items-center justify-center gap-1.5" data-tab="tab-crop">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-medium text-[#5f6368] hover:text-[#202124] rounded-full transition-all flex items-center justify-center gap-1.5" data-tab="tab-crop">
           <i data-lucide="crop" class="w-4 h-4"></i>
           <span>2. Crop &amp; Edit</span>
         </button>
-        <button type="button" class="tab-btn pph-tab-inactive flex-1 py-2 px-3 text-xs font-medium rounded-full transition-all flex items-center justify-center gap-1.5" data-tab="tab-layout">
+        <button type="button" class="tab-btn flex-1 py-2 px-3 text-xs font-medium text-[#5f6368] hover:text-[#202124] rounded-full transition-all flex items-center justify-center gap-1.5" data-tab="tab-layout">
           <i data-lucide="grid" class="w-4 h-4"></i>
           <span>3. Sheet Layout</span>
         </button>
@@ -295,49 +116,49 @@
 
       <!-- ========== TAB 1: PHOTOS ========== -->
       <div id="tab-photos" class="tab-content flex flex-col gap-4">
-        <div id="drop-zone" class="pph-card rounded-2xl border-2 border-dashed p-6 text-center transition-all cursor-pointer group shadow-sm block relative overflow-hidden" style="border-color:var(--pph-border-2)">
+        <div id="drop-zone" class="bg-white rounded-2xl border-2 border-dashed border-[#dadce0] hover:border-blue-500 p-6 text-center transition-all cursor-pointer group shadow-sm block relative overflow-hidden">
           <input type="file" id="file-input" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Click or drop photos to upload" />
 
-          <div class="pph-icon-primary w-12 h-12 rounded-full mx-auto flex items-center justify-center mb-3 transition-colors pointer-events-none">
+          <div class="w-12 h-12 rounded-full bg-blue-50 group-hover:bg-blue-100 text-blue-600 mx-auto flex items-center justify-center mb-3 transition-colors pointer-events-none">
             <i data-lucide="upload-cloud" class="w-6 h-6"></i>
           </div>
-          <h2 class="text-sm font-semibold pph-text mb-1 pointer-events-none">Upload Portrait Photographs</h2>
-          <p class="text-xs pph-text-2 mb-3 pointer-events-none">Drag &amp; drop files here or click anywhere to browse</p>
-          <div class="flex items-center justify-center gap-2 text-[11px] pph-text-3 pointer-events-none">
+          <h2 class="text-sm font-semibold text-[#202124] mb-1 pointer-events-none">Upload Portrait Photographs</h2>
+          <p class="text-xs text-[#5f6368] mb-3 pointer-events-none">Drag &amp; drop files here or click anywhere to browse</p>
+          <div class="flex items-center justify-center gap-2 text-[11px] text-[#9aa0a6] pointer-events-none">
             <span>JPG, JPEG, PNG, HEIC, WebP</span>
             <span>·</span>
             <span>Up to 12 people</span>
             <span>·</span>
             <span>Max 25MB each</span>
           </div>
-          <div class="mt-4 pt-3 flex items-center justify-center gap-3 relative z-20" style="border-top:1px solid var(--pph-border)">
-            <button type="button" id="btn-browse-trigger" class="pph-btn-primary px-4 py-2 text-xs rounded-full shadow-sm cursor-pointer flex items-center gap-1.5">
+          <div class="mt-4 pt-3 border-t border-[#f1f3f4] flex items-center justify-center gap-3 relative z-20">
+            <button type="button" id="btn-browse-trigger" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
               <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
               <span>Browse Files</span>
             </button>
-            <button type="button" id="btn-sample-trigger" class="pph-btn-tonal px-4 py-2 text-xs rounded-full cursor-pointer flex items-center gap-1.5">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 pph-link"></i>
+            <button type="button" id="btn-sample-trigger" class="px-4 py-2 bg-white border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043] text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i>
               <span>Load Sample Photo</span>
             </button>
           </div>
         </div>
 
-        <div class="pph-card rounded-2xl p-4 shadow-sm">
-          <div class="flex items-center justify-between mb-3 pb-2" style="border-bottom:1px solid var(--pph-border)">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#f1f3f4]">
             <div class="flex items-center gap-2">
-              <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">People In Library</h3>
-              <span id="lib-count-text" class="text-xs pph-text-3">(0 of 12)</span>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">People In Library</h3>
+              <span id="lib-count-text" class="text-xs text-[#9aa0a6]">(0 of 12)</span>
             </div>
-            <button type="button" id="btn-add-more" class="pph-link text-xs font-medium flex items-center gap-1 cursor-pointer">
+            <button type="button" id="btn-add-more" class="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 cursor-pointer">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i>
               <span>Add Photo</span>
             </button>
           </div>
 
-          <div id="library-empty-state" class="py-8 text-center pph-text-3">
-            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2" style="color:var(--pph-border-2)"></i>
-            <p class="text-xs font-medium pph-text-2">No photos uploaded yet</p>
-            <p class="text-[11px] pph-text-3 mt-0.5">Upload a photo above to start cropping and arranging</p>
+          <div id="library-empty-state" class="py-8 text-center text-[#9aa0a6]">
+            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 text-[#dadce0]"></i>
+            <p class="text-xs font-medium text-[#5f6368]">No photos uploaded yet</p>
+            <p class="text-[11px] text-[#9aa0a6] mt-0.5">Upload a photo above to start cropping and arranging</p>
           </div>
 
           <div id="people-list" class="space-y-2 max-h-[460px] overflow-y-auto pr-1"></div>
@@ -347,40 +168,40 @@
       <!-- ========== TAB 2: CROP & EDIT ========== -->
       <div id="tab-crop" class="tab-content hidden flex flex-col gap-4">
 
-        <div class="pph-card rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-3.5 flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <div id="active-person-thumb" class="w-9 h-9 rounded-full pph-card-sub overflow-hidden shrink-0 flex items-center justify-center">
-              <i data-lucide="user" class="w-5 h-5 pph-text-3"></i>
+            <div id="active-person-thumb" class="w-9 h-9 rounded-full bg-[#f1f3f4] border border-[#dadce0] overflow-hidden shrink-0 flex items-center justify-center">
+              <i data-lucide="user" class="w-5 h-5 text-[#9aa0a6]"></i>
             </div>
             <div class="truncate">
               <div class="flex items-center gap-1.5">
-                <span class="text-xs font-semibold pph-text truncate" id="active-person-name">No Photo Selected</span>
-                <button type="button" id="btn-rename-active" class="pph-text-3 hover:pph-text p-0.5" title="Rename Person">
+                <span class="text-xs font-semibold text-[#202124] truncate" id="active-person-name">No Photo Selected</span>
+                <button type="button" id="btn-rename-active" class="text-[#9aa0a6] hover:text-[#5f6368] p-0.5" title="Rename Person">
                   <i data-lucide="edit-2" class="w-3 h-3"></i>
                 </button>
               </div>
-              <p class="text-[11px] pph-text-2 truncate" id="active-person-meta">Select a photo from Tab 1</p>
+              <p class="text-[11px] text-[#5f6368] truncate" id="active-person-meta">Select a photo from Tab 1</p>
             </div>
           </div>
-          <button type="button" id="btn-switch-to-lib" class="pph-link text-xs font-medium shrink-0">
+          <button type="button" id="btn-switch-to-lib" class="text-xs text-blue-600 hover:text-blue-700 font-medium shrink-0">
             Switch Person
           </button>
         </div>
 
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">Crop Workspace</h3>
-            <div class="flex items-center gap-1 text-[11px] font-mono pph-link pph-chip-info px-2 py-0.5 rounded-full">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">Crop Workspace</h3>
+            <div class="flex items-center gap-1 text-[11px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
               <span id="crop-dimension-label">35 × 45 mm</span>
             </div>
           </div>
 
-          <div class="relative w-full h-[320px] rounded-2xl overflow-hidden flex items-center justify-center checker-pattern">
+          <div class="relative w-full h-[320px] bg-[#202124] rounded-2xl overflow-hidden flex items-center justify-center checker-pattern">
             <img id="cropper-image" class="max-w-full max-h-full block opacity-0" alt="Crop target" />
             <canvas id="custom-crop-canvas" class="hidden absolute inset-0 w-full h-full"></canvas>
 
-            <div id="bg-remove-status" class="hidden absolute top-2.5 left-2.5 z-20 text-white text-[11px] font-medium px-3 py-1.5 rounded-full border shadow-md flex items-center gap-2" style="background-color:rgba(32,33,36,.95); border-color:rgba(138,180,248,.5)">
-              <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin" style="color:var(--pph-primary)"></i>
+            <div id="bg-remove-status" class="hidden absolute top-2.5 left-2.5 z-20 bg-[#202124]/95 backdrop-blur text-white text-[11px] font-medium px-3 py-1.5 rounded-full border border-blue-400/50 shadow-md flex items-center gap-2">
+              <i data-lucide="loader-2" class="w-3.5 h-3.5 text-blue-300 animate-spin"></i>
               <span id="bg-remove-status-text">Cleaning background to pure white...</span>
             </div>
 
@@ -395,16 +216,16 @@
               <ellipse cx="50" cy="46" rx="26" ry="32" fill="none" stroke="#38bdf8" stroke-width="0.9" stroke-dasharray="3,3" opacity="0.8" />
             </svg>
 
-            <div id="cropper-placeholder" class="text-center pph-text-3 p-4">
-              <i data-lucide="image-off" class="w-8 h-8 mx-auto mb-2 pph-text-2"></i>
-              <p class="text-xs font-medium pph-text">No photograph loaded in editor</p>
+            <div id="cropper-placeholder" class="text-center text-[#9aa0a6] p-4">
+              <i data-lucide="image-off" class="w-8 h-8 mx-auto mb-2 text-[#5f6368]"></i>
+              <p class="text-xs font-medium text-[#e8eaed]">No photograph loaded in editor</p>
               <div class="mt-3 flex items-center justify-center gap-2">
-                <button type="button" id="btn-upload-in-editor" class="pph-btn-primary px-3.5 py-1.5 text-xs rounded-full shadow-sm cursor-pointer flex items-center gap-1.5">
+                <button type="button" id="btn-upload-in-editor" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
                   <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
                   <span>Browse Photo</span>
                 </button>
-                <button type="button" id="btn-load-sample-in-editor" class="pph-btn-tonal px-3.5 py-1.5 text-xs rounded-full cursor-pointer flex items-center gap-1">
-                  <i data-lucide="sparkles" class="w-3.5 h-3.5 pph-link"></i>
+                <button type="button" id="btn-load-sample-in-editor" class="px-3.5 py-1.5 bg-[#3c4043] hover:bg-[#5f6368] text-[#e8eaed] text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-300"></i>
                   <span>Load Sample</span>
                 </button>
               </div>
@@ -413,56 +234,56 @@
 
           <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
             <div class="flex items-center gap-1.5 flex-wrap">
-              <button type="button" id="btn-remove-bg" class="pph-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs shadow-sm cursor-pointer select-none" title="Clean up photo background automatically and make it pure white for passport compliance">
+              <button type="button" id="btn-remove-bg" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-medium shadow-sm transition-all cursor-pointer select-none" title="Clean up photo background automatically and make it pure white for passport compliance">
                 <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
                 <span id="btn-remove-bg-label">Remove Background</span>
               </button>
 
-              <button type="button" id="btn-revert-bg" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full pph-btn-tonal text-xs cursor-pointer select-none" title="Revert to original photo background">
-                <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
+              <button type="button" id="btn-revert-bg" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] text-xs border border-[#dadce0] font-medium transition-colors cursor-pointer select-none" title="Revert to original photo background">
+                <i data-lucide="undo-2" class="w-3.5 h-3.5 text-[#5f6368]"></i>
                 <span>Original BG</span>
               </button>
 
-              <div class="h-4 w-px mx-0.5" style="background-color:var(--pph-border)"></div>
+              <div class="h-4 w-px bg-[#dadce0] mx-0.5"></div>
 
-              <button type="button" id="btn-crop-zoom-in" class="p-1.5 rounded-full pph-btn-tonal" title="Zoom In">
+              <button type="button" id="btn-crop-zoom-in" class="p-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] border border-[#dadce0]" title="Zoom In">
                 <i data-lucide="zoom-in" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-crop-zoom-out" class="p-1.5 rounded-full pph-btn-tonal" title="Zoom Out">
+              <button type="button" id="btn-crop-zoom-out" class="p-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] border border-[#dadce0]" title="Zoom Out">
                 <i data-lucide="zoom-out" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-rotate-ccw" class="p-1.5 rounded-full pph-btn-tonal" title="Rotate 90° CCW">
+              <button type="button" id="btn-rotate-ccw" class="p-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] border border-[#dadce0]" title="Rotate 90° CCW">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-rotate-cw" class="p-1.5 rounded-full pph-btn-tonal" title="Rotate 90° CW">
+              <button type="button" id="btn-rotate-cw" class="p-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] border border-[#dadce0]" title="Rotate 90° CW">
                 <i data-lucide="rotate-cw" class="w-4 h-4"></i>
               </button>
-              <button type="button" id="btn-crop-reset" class="px-3 py-1.5 rounded-full pph-btn-tonal text-xs" title="Reset Crop">
+              <button type="button" id="btn-crop-reset" class="px-3 py-1.5 rounded-full hover:bg-[#f1f3f4] text-[#3c4043] text-xs border border-[#dadce0] font-medium" title="Reset Crop">
                 Reset
               </button>
             </div>
 
             <div class="flex items-center gap-2.5 flex-wrap">
-              <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium pph-text select-none" title="Lock aspect ratio to preset dimensions">
-                <input type="checkbox" id="toggle-lock-ratio" checked class="w-3.5 h-3.5 rounded" />
+              <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-[#3c4043] select-none" title="Lock aspect ratio to preset dimensions">
+                <input type="checkbox" id="toggle-lock-ratio" checked class="w-3.5 h-3.5 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
                 <span>Lock Ratio</span>
               </label>
-              <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium pph-text select-none" title="Show official crown, eye-line and chin positioning guides">
-                <input type="checkbox" id="toggle-face-guide" class="w-3.5 h-3.5 rounded" />
+              <label class="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-[#3c4043] select-none" title="Show official crown, eye-line and chin positioning guides">
+                <input type="checkbox" id="toggle-face-guide" class="w-3.5 h-3.5 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
                 <span>Face Guide</span>
               </label>
             </div>
           </div>
 
-          <div class="space-y-1.5 pt-2" style="border-top:1px solid var(--pph-border)">
+          <div class="space-y-1.5 pt-2 border-t border-[#f1f3f4]">
             <div class="flex items-center justify-between">
-              <label class="text-xs font-semibold pph-text">Preset Dimensions</label>
-              <button type="button" id="btn-save-as-default-preset" class="pph-link text-[11px] font-medium flex items-center gap-1 cursor-pointer select-none" title="Save this dimension as default for next photos">
+              <label class="text-xs font-semibold text-[#3c4043]">Preset Dimensions</label>
+              <button type="button" id="btn-save-as-default-preset" class="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-colors cursor-pointer select-none" title="Save this dimension as default for next photos">
                 <i data-lucide="bookmark-check" class="w-3.5 h-3.5"></i>
                 <span>Set as Default Preset</span>
               </button>
             </div>
-            <select id="select-preset" class="pph-input w-full text-xs rounded-xl p-2.5 font-medium">
+            <select id="select-preset" class="w-full text-xs bg-[#f8f9fa] border border-[#dadce0] rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-[#202124]">
               <option value="a4_6per_row" selected>✓ A4 6 Photos/Row (Equal Margins) - 3.2x4.114cm</option>
               <option value="35x45">Indian Passport / Visa (35 × 45 mm)</option>
               <option value="custom">Custom Dimensions (User-defined mm)</option>
@@ -474,79 +295,79 @@
             </select>
           </div>
 
-          <div id="custom-dimension-inputs" class="hidden grid grid-cols-2 gap-2 p-2.5 rounded-xl" style="background-color:var(--pph-surface-2); border:1px solid var(--pph-border)">
+          <div id="custom-dimension-inputs" class="hidden grid grid-cols-2 gap-2 p-2.5 bg-[#f8f9fa] rounded-xl border border-[#dadce0]">
             <div>
-              <label class="text-[11px] font-semibold pph-text-2">Width (mm)</label>
-              <input type="number" id="custom-width-mm" value="35" min="15" max="150" step="0.5" class="pph-input w-full text-xs p-1.5 rounded-lg" />
+              <label class="text-[11px] font-semibold text-[#5f6368]">Width (mm)</label>
+              <input type="number" id="custom-width-mm" value="35" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-[#dadce0] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div>
-              <label class="text-[11px] font-semibold pph-text-2">Height (mm)</label>
-              <input type="number" id="custom-height-mm" value="45" min="15" max="150" step="0.5" class="pph-input w-full text-xs p-1.5 rounded-lg" />
+              <label class="text-[11px] font-semibold text-[#5f6368]">Height (mm)</label>
+              <input type="number" id="custom-height-mm" value="45" min="15" max="150" step="0.5" class="w-full text-xs p-1.5 border border-[#dadce0] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
           </div>
 
-          <p class="text-[11px] pph-text-3 italic leading-relaxed">
+          <p class="text-[11px] text-[#9aa0a6] italic leading-relaxed">
             Note: Dimensions specify physical crop size. Always check your embassy or issuing agency guidelines for official head height, background color, and posture requirements.
           </p>
         </div>
 
         <!-- Image Adjustments -->
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">Image Adjustments</h3>
-            <button type="button" id="btn-reset-adjustments" class="pph-link text-[11px] font-medium">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">Image Adjustments</h3>
+            <button type="button" id="btn-reset-adjustments" class="text-[11px] text-blue-600 hover:text-blue-700 font-medium">
               Reset Adjustments
             </button>
           </div>
 
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs">
-              <span class="pph-text">Brightness</span>
-              <span id="brightness-val" class="font-mono pph-text font-semibold tabular-nums">100%</span>
+              <span class="text-[#3c4043]">Brightness</span>
+              <span id="brightness-val" class="font-mono text-[#202124] font-semibold tabular-nums">100%</span>
             </div>
-            <input type="range" id="slider-brightness" min="50" max="150" value="100" class="w-full h-1.5 rounded-lg appearance-none cursor-pointer" style="background-color:var(--pph-surface-3)" />
+            <input type="range" id="slider-brightness" min="50" max="150" value="100" class="w-full h-1.5 bg-[#dadce0] rounded-lg appearance-none cursor-pointer accent-blue-600" />
           </div>
 
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs">
-              <span class="pph-text">Contrast</span>
-              <span id="contrast-val" class="font-mono pph-text font-semibold tabular-nums">100%</span>
+              <span class="text-[#3c4043]">Contrast</span>
+              <span id="contrast-val" class="font-mono text-[#202124] font-semibold tabular-nums">100%</span>
             </div>
-            <input type="range" id="slider-contrast" min="50" max="150" value="100" class="w-full h-1.5 rounded-lg appearance-none cursor-pointer" style="background-color:var(--pph-surface-3)" />
+            <input type="range" id="slider-contrast" min="50" max="150" value="100" class="w-full h-1.5 bg-[#dadce0] rounded-lg appearance-none cursor-pointer accent-blue-600" />
           </div>
 
-          <div class="pt-2 space-y-2" style="border-top:1px solid var(--pph-border)">
+          <div class="pt-2 border-t border-[#f1f3f4] space-y-2">
             <div class="flex items-center justify-between text-xs">
-              <span class="pph-text font-semibold flex items-center gap-1.5">
-                <i data-lucide="shield-check" class="w-4 h-4" style="color:var(--pph-success)"></i>
+              <span class="text-[#202124] font-semibold flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-green-600"></i>
                 <span>Background Compliance</span>
               </span>
-              <span class="pph-chip-success text-[10px] font-semibold px-1.5 py-0.5 rounded-full">Pure White Standard</span>
+              <span class="text-[10px] bg-green-50 text-green-700 font-semibold px-1.5 py-0.5 rounded-full border border-green-200">Pure White Standard</span>
             </div>
-            <p class="text-[11px] pph-text-2 leading-snug">
+            <p class="text-[11px] text-[#5f6368] leading-snug">
               Official passport/visa regulations require a plain, shadowless pure white background. Click below to automatically clean and whiten your backdrop. Your photo is sent over an encrypted connection to a background-removal service and is not stored by this site; if the service is unavailable, on-device AI is used instead.
             </p>
             <div class="flex items-center gap-2 pt-0.5">
-              <button type="button" id="btn-remove-bg-card" class="pph-btn-primary flex-1 py-2 px-3 rounded-full text-xs shadow-sm flex items-center justify-center gap-1.5 cursor-pointer select-none">
+              <button type="button" id="btn-remove-bg-card" class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-medium rounded-full text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none">
                 <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
                 <span>Clean &amp; Replace with Pure White</span>
               </button>
             </div>
             <label class="flex items-center justify-between text-xs cursor-pointer pt-1">
-              <span class="pph-text font-medium text-[11px]">Enforce solid pure white background (#FFFFFF)</span>
-              <input type="checkbox" id="toggle-white-bg" checked class="w-3.5 h-3.5 rounded" />
+              <span class="text-[#3c4043] font-medium text-[11px]">Enforce solid pure white background (#FFFFFF)</span>
+              <input type="checkbox" id="toggle-white-bg" checked class="w-3.5 h-3.5 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
             </label>
           </div>
         </div>
 
         <!-- Border Settings -->
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-          <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">Border Settings</h3>
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">Border Settings</h3>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block">Border Thickness</label>
-              <select id="select-border-thickness" class="pph-input w-full text-xs rounded-xl p-2">
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block">Border Thickness</label>
+              <select id="select-border-thickness" class="w-full text-xs bg-[#f8f9fa] border border-[#dadce0] rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="0">None (0.0 mm)</option>
                 <option value="0.3" selected>Thin (0.3 mm)</option>
                 <option value="0.6">Medium (0.6 mm)</option>
@@ -555,51 +376,51 @@
             </div>
 
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block">Border Color</label>
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block">Border Color</label>
               <div class="flex items-center gap-1.5">
-                <select id="select-border-color" class="pph-input flex-1 text-xs rounded-xl p-2">
+                <select id="select-border-color" class="flex-1 text-xs bg-[#f8f9fa] border border-[#dadce0] rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <option value="#000000" selected>Black (#000000)</option>
                   <option value="#D1D5DB">Light Gray (#D1D5DB)</option>
                   <option value="custom">Custom Color</option>
                 </select>
-                <input type="color" id="input-custom-border-color" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer p-0.5" style="background-color:var(--pph-surface-2); border:1px solid var(--pph-border-2)" title="Pick custom color" />
+                <input type="color" id="input-custom-border-color" value="#000000" class="w-8 h-8 rounded-lg border border-[#dadce0] cursor-pointer p-0.5 bg-white" title="Pick custom color" />
               </div>
             </div>
           </div>
-          <p class="text-[11px] pph-text-3">Borders are drawn within the exact physical millimeter boundaries and scale seamlessly to 300 DPI.</p>
+          <p class="text-[11px] text-[#9aa0a6]">Borders are drawn within the exact physical millimeter boundaries and scale seamlessly to 300 DPI.</p>
         </div>
 
         <!-- Name & Date Strip -->
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2 flex items-center gap-1.5">
-              <i data-lucide="type" class="w-3.5 h-3.5 pph-link"></i>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368] flex items-center gap-1.5">
+              <i data-lucide="type" class="w-3.5 h-3.5 text-blue-600"></i>
               <span>Name &amp; Date on Photo</span>
             </h3>
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background-color:var(--pph-surface-2); color:var(--pph-text-2); border:1px solid var(--pph-border)">Bottom White Bar</span>
+            <span class="text-[10px] bg-[#f1f3f4] text-[#5f6368] font-semibold px-2 py-0.5 rounded-full border border-[#dadce0]">Bottom White Bar</span>
           </div>
 
-          <p class="text-[11px] pph-text-2 leading-snug">
+          <p class="text-[11px] text-[#5f6368] leading-snug">
             Add candidate name, date of photo (DOP), or custom text on a compliant solid white strip at the bottom of the photo. Does not alter physical photo dimensions.
           </p>
 
           <div class="space-y-2">
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label for="input-photo-text" class="text-[11px] font-semibold pph-text">Photo Text / Name &amp; Date</label>
+                <label for="input-photo-text" class="text-[11px] font-semibold text-[#3c4043]">Photo Text / Name &amp; Date</label>
                 <div class="flex items-center gap-1.5">
-                  <button type="button" id="btn-insert-today-date" class="pph-link text-[10px] font-medium flex items-center gap-1 cursor-pointer" title="Append today's date">
+                  <button type="button" id="btn-insert-today-date" class="text-[10px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 cursor-pointer" title="Append today's date">
                     <i data-lucide="calendar" class="w-3 h-3"></i>
                     <span>+ Today's Date</span>
                   </button>
-                  <button type="button" id="btn-clear-photo-text" class="text-[10px] font-medium cursor-pointer" style="color:var(--pph-error)" title="Clear text">
+                  <button type="button" id="btn-clear-photo-text" class="text-[10px] text-[#d93025] hover:text-[#b3261e] font-medium cursor-pointer" title="Clear text">
                     Clear
                   </button>
                 </div>
               </div>
-              <textarea id="input-photo-text" rows="2" maxlength="200" class="pph-input w-full text-xs p-2 rounded-xl font-mono" placeholder="e.g.&#10;NAME: JOHN DOE&#10;DOP: 21/10/2026"></textarea>
+              <textarea id="input-photo-text" rows="2" maxlength="200" class="w-full text-xs p-2 border border-[#dadce0] rounded-xl font-mono focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-[#9aa0a6] placeholder:font-sans" placeholder="e.g.&#10;NAME: JOHN DOE&#10;DOP: 21/10/2026"></textarea>
             </div>
-            <div class="flex items-center justify-between text-[11px] pph-text-3">
+            <div class="flex items-center justify-between text-[11px] text-[#9aa0a6]">
               <span>Renders cleanly at bottom of image within existing dimensions</span>
             </div>
           </div>
@@ -609,147 +430,147 @@
       <!-- ========== TAB 3: SHEET LAYOUT ========== -->
       <div id="tab-layout" class="tab-content hidden flex flex-col gap-4">
 
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-          <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">Paper Specification</h3>
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">Paper Specification</h3>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block">Paper Size</label>
-              <select id="select-paper-size" class="pph-input w-full text-xs rounded-xl p-2">
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block">Paper Size</label>
+              <select id="select-paper-size" class="w-full text-xs bg-[#f8f9fa] border border-[#dadce0] rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="A4" selected>A4 (210 × 297 mm)</option>
                 <option value="4x6">4 × 6 inch (101.6 × 152.4 mm)</option>
               </select>
             </div>
 
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block">Orientation</label>
-              <select id="select-paper-orientation" class="pph-input w-full text-xs rounded-xl p-2">
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block">Orientation</label>
+              <select id="select-paper-orientation" class="w-full text-xs bg-[#f8f9fa] border border-[#dadce0] rounded-xl p-2 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="portrait" selected>Portrait</option>
                 <option value="landscape">Landscape</option>
               </select>
             </div>
           </div>
 
-          <div class="pt-2" style="border-top:1px solid var(--pph-border)">
-            <label class="text-[11px] font-semibold pph-text-2 mb-1.5 block">Sheet Arrangement Mode</label>
+          <div class="pt-2 border-t border-[#f1f3f4]">
+            <label class="text-[11px] font-semibold text-[#5f6368] mb-1.5 block">Sheet Arrangement Mode</label>
             <div class="grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2 p-2 rounded-xl cursor-pointer text-xs pph-card-sub hover:bg-black/30 transition-colors">
-                <input type="radio" name="layout-mode" value="single" checked class="w-3.5 h-3.5" />
-                <span class="font-medium pph-text">Fill with One Person</span>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-[#dadce0] hover:bg-[#f8f9fa] cursor-pointer text-xs">
+                <input type="radio" name="layout-mode" value="single" checked class="text-blue-600 focus:ring-blue-500" />
+                <span class="font-medium text-[#202124]">Fill with One Person</span>
               </label>
-              <label class="flex items-center gap-2 p-2 rounded-xl cursor-pointer text-xs pph-card-sub hover:bg-black/30 transition-colors">
-                <input type="radio" name="layout-mode" value="mixed" class="w-3.5 h-3.5" />
-                <span class="font-medium pph-text">Multi-Person Mixed</span>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-[#dadce0] hover:bg-[#f8f9fa] cursor-pointer text-xs">
+                <input type="radio" name="layout-mode" value="mixed" class="text-blue-600 focus:ring-blue-500" />
+                <span class="font-medium text-[#202124]">Multi-Person Mixed</span>
               </label>
             </div>
           </div>
 
-          <div id="single-mode-controls" class="space-y-2.5 pt-2" style="border-top:1px solid var(--pph-border)">
+          <div id="single-mode-controls" class="space-y-2.5 pt-2 border-t border-[#f1f3f4]">
             <div class="flex items-center justify-between">
-              <label class="text-[11px] font-semibold pph-text block">Number of Copies</label>
+              <label class="text-[11px] font-semibold text-[#3c4043] block">Number of Copies</label>
               <div class="flex items-center gap-2">
-                <button type="button" id="btn-save-as-default-copies" class="pph-link text-[11px] font-medium flex items-center gap-1 cursor-pointer select-none" title="Save this number of copies as your default">
+                <button type="button" id="btn-save-as-default-copies" class="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-colors cursor-pointer select-none" title="Save this number of copies as your default">
                   <i data-lucide="bookmark-check" class="w-3.5 h-3.5"></i>
                   <span>Set as Default Copies</span>
                 </button>
-                <span class="text-[11px] pph-text-3 font-mono">6/row</span>
+                <span class="text-[11px] text-[#9aa0a6] font-mono">6/row</span>
               </div>
             </div>
 
             <div class="flex items-center gap-2">
-              <div class="flex items-center rounded-full overflow-hidden shadow-sm" style="border:1px solid var(--pph-border-2); background-color:var(--pph-surface-2)">
-                <button type="button" id="btn-copy-minus" class="w-8 h-8 font-black text-sm flex items-center justify-center transition-colors select-none pph-text hover:bg-black/20" title="Decrease copies (-1)">
+              <div class="flex items-center border border-[#dadce0] rounded-full overflow-hidden bg-white shadow-sm">
+                <button type="button" id="btn-copy-minus" class="w-8 h-8 bg-[#f8f9fa] hover:bg-[#f1f3f4] active:bg-[#e8eaed] text-[#202124] font-black text-sm flex items-center justify-center transition-colors select-none" title="Decrease copies (-1)">
                   −
                 </button>
-                <input type="number" id="input-custom-copies" min="1" max="100" value="4" class="w-14 h-8 text-center text-xs font-mono font-bold py-1 focus:outline-none tabular-nums" style="color:var(--pph-text); background:transparent; border-left:1px solid var(--pph-border); border-right:1px solid var(--pph-border)" />
-                <button type="button" id="btn-copy-plus" class="w-8 h-8 font-black text-sm flex items-center justify-center transition-colors select-none pph-text hover:bg-black/20" title="Increase copies (+1)">
+                <input type="number" id="input-custom-copies" min="1" max="100" value="4" class="w-14 h-8 text-center text-xs font-mono font-bold text-[#202124] border-x border-[#dadce0] py-1 focus:outline-none tabular-nums" />
+                <button type="button" id="btn-copy-plus" class="w-8 h-8 bg-[#f8f9fa] hover:bg-[#f1f3f4] active:bg-[#e8eaed] text-[#202124] font-black text-sm flex items-center justify-center transition-colors select-none" title="Increase copies (+1)">
                   +
                 </button>
               </div>
 
               <div class="flex items-center gap-1">
-                <button type="button" id="btn-minus-row" class="px-2 py-1.5 text-xs font-medium rounded-full transition-colors" style="color:var(--pph-error); background-color:var(--pph-error-bg); border:1px solid var(--pph-error-border)" title="Delete 1 full row (-6 photos)">
+                <button type="button" id="btn-minus-row" class="px-2 py-1.5 text-xs font-medium text-[#d93025] bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors" title="Delete 1 full row (-6 photos)">
                   −6 Row
                 </button>
-                <button type="button" id="btn-add-row" class="px-2 py-1.5 text-xs font-medium rounded-full transition-colors" style="color:var(--pph-primary); background-color:rgba(138,180,248,.12); border:1px solid rgba(138,180,248,.30)" title="Add 1 full row (+6 photos)">
+                <button type="button" id="btn-add-row" class="px-2 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-full transition-colors" title="Add 1 full row (+6 photos)">
                   +6 Row
                 </button>
               </div>
 
-              <button type="button" id="btn-fill-max" class="pph-link text-xs font-medium ml-auto whitespace-nowrap">
+              <button type="button" id="btn-fill-max" class="text-xs font-medium text-blue-600 hover:text-blue-700 ml-auto whitespace-nowrap">
                 Fill Max
               </button>
             </div>
 
             <div class="grid grid-cols-6 gap-1">
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full" data-copies="4" style="background-color:rgba(138,180,248,.18); color:var(--pph-primary); border:1px solid var(--pph-primary)">4</button>
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full pph-btn-tonal" data-copies="6">6</button>
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full pph-btn-tonal" data-copies="8">8</button>
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full pph-btn-tonal" data-copies="12">12</button>
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full pph-btn-tonal" data-copies="24">24</button>
-              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full pph-btn-tonal" data-copies="36">36</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-blue-600 bg-blue-50 text-blue-700" data-copies="4">4</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043]" data-copies="6">6</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043]" data-copies="8">8</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043]" data-copies="12">12</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043]" data-copies="24">24</button>
+              <button type="button" class="btn-copy-preset py-1 text-xs font-medium rounded-full border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043]" data-copies="36">36</button>
             </div>
           </div>
 
-          <div id="mixed-mode-controls" class="hidden space-y-2 pt-2" style="border-top:1px solid var(--pph-border)">
-            <div class="flex items-center justify-between text-[11px] font-semibold pph-text-2">
+          <div id="mixed-mode-controls" class="hidden space-y-2 pt-2 border-t border-[#f1f3f4]">
+            <div class="flex items-center justify-between text-[11px] font-semibold text-[#5f6368]">
               <span>Person Copies Allocation</span>
-              <span id="mixed-total-count" class="font-mono pph-link">Total: 0</span>
+              <span id="mixed-total-count" class="font-mono text-blue-700">Total: 0</span>
             </div>
             <div id="mixed-people-allocation-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
           </div>
         </div>
 
-        <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-semibold uppercase tracking-wider pph-text-2">Spacing &amp; Margins</h3>
-            <button type="button" id="btn-reset-spacing" class="pph-link text-[11px] font-medium">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-[#5f6368]">Spacing &amp; Margins</h3>
+            <button type="button" id="btn-reset-spacing" class="text-[11px] text-blue-600 hover:text-blue-700 font-medium">
               Optimal Defaults
             </button>
           </div>
 
           <div class="grid grid-cols-3 gap-2.5">
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block truncate" title="Side Margins (mm)">Side Margin (mm)</label>
-              <input type="number" id="input-sheet-margin" min="0" max="50" step="0.5" value="10" class="pph-input w-full text-xs p-2 rounded-xl font-mono tabular-nums" />
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block truncate" title="Side Margins (mm)">Side Margin (mm)</label>
+              <input type="number" id="input-sheet-margin" min="0" max="50" step="0.5" value="10" class="w-full text-xs p-2 border border-[#dadce0] rounded-xl font-mono tabular-nums focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block truncate" title="Top Margin (mm)">Top Margin (mm)</label>
-              <input type="number" id="input-sheet-margin-top" min="0" max="100" step="0.5" value="10" class="pph-input w-full text-xs p-2 rounded-xl font-mono tabular-nums" />
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block truncate" title="Top Margin (mm)">Top Margin (mm)</label>
+              <input type="number" id="input-sheet-margin-top" min="0" max="100" step="0.5" value="10" class="w-full text-xs p-2 border border-[#dadce0] rounded-xl font-mono tabular-nums focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div>
-              <label class="text-[11px] font-semibold pph-text-2 mb-1 block truncate" title="Photo Gap / Spacing (mm)">Photo Gap (mm)</label>
-              <input type="number" id="input-photo-spacing" min="0" max="25" step="0.5" value="3" class="pph-input w-full text-xs p-2 rounded-xl font-mono tabular-nums" />
+              <label class="text-[11px] font-semibold text-[#5f6368] mb-1 block truncate" title="Photo Gap / Spacing (mm)">Photo Gap (mm)</label>
+              <input type="number" id="input-photo-spacing" min="0" max="25" step="0.5" value="3" class="w-full text-xs p-2 border border-[#dadce0] rounded-xl font-mono tabular-nums focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-2" style="border-top:1px solid var(--pph-border)">
+          <div class="flex items-center justify-between pt-2 border-t border-[#f1f3f4]">
             <div>
-              <span class="text-xs font-medium pph-text block">Cutting Guidelines</span>
-              <span class="text-[11px] pph-text-3">Subtle dashed cut lines around photos for scissors/guillotine</span>
+              <span class="text-xs font-medium text-[#202124] block">Cutting Guidelines</span>
+              <span class="text-[11px] text-[#9aa0a6]">Subtle dashed cut lines around photos for scissors/guillotine</span>
             </div>
-            <input type="checkbox" id="toggle-cut-guides" checked class="w-4 h-4 rounded" />
+            <input type="checkbox" id="toggle-cut-guides" checked class="w-4 h-4 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
           </div>
 
-          <div class="flex items-center justify-between pt-2" style="border-top:1px solid var(--pph-border)">
+          <div class="flex items-center justify-between pt-2 border-t border-[#f1f3f4]">
             <div>
-              <span class="text-xs font-medium pph-text block">Center Grid on Sheet</span>
-              <span class="text-[11px] pph-text-3">Evenly distributes leftover margins</span>
+              <span class="text-xs font-medium text-[#202124] block">Center Grid on Sheet</span>
+              <span class="text-[11px] text-[#9aa0a6]">Evenly distributes leftover margins</span>
             </div>
-            <input type="checkbox" id="toggle-center-grid" checked class="w-4 h-4 rounded" />
+            <input type="checkbox" id="toggle-center-grid" checked class="w-4 h-4 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
           </div>
         </div>
 
-        <div id="capacity-info-box" class="pph-card-sub rounded-2xl p-3.5 text-xs space-y-1">
-          <div class="flex items-center justify-between font-semibold pph-text">
+        <div id="capacity-info-box" class="bg-[#f8f9fa] border border-[#dadce0] rounded-2xl p-3.5 text-xs space-y-1">
+          <div class="flex items-center justify-between font-semibold text-[#202124]">
             <span>Sheet Capacity:</span>
-            <span id="capacity-photos-fit" class="font-mono pph-link">0 photos / sheet</span>
+            <span id="capacity-photos-fit" class="font-mono text-blue-700">0 photos / sheet</span>
           </div>
-          <div class="flex items-center justify-between pph-text-2">
+          <div class="flex items-center justify-between text-[#5f6368]">
             <span>Grid Layout:</span>
-            <span id="capacity-grid-cols-rows" class="font-mono pph-text">0 cols × 0 rows</span>
+            <span id="capacity-grid-cols-rows" class="font-mono text-[#3c4043]">0 cols × 0 rows</span>
           </div>
-          <div id="overflow-warning" class="hidden pph-chip-warning rounded-lg p-2 mt-2 leading-relaxed text-[11px]">
+          <div id="overflow-warning" class="hidden text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-2 leading-relaxed text-[11px]">
             ⚠️ Requested copies exceed 1 sheet. Multiple sheets (<span id="total-sheets-count">2</span>) will be generated.
           </div>
         </div>
@@ -760,88 +581,88 @@
     <!-- ========== RIGHT: PREVIEW & EXPORT ========== -->
     <section class="lg:col-span-7 xl:col-span-8 flex flex-col gap-4">
 
-      <div class="pph-card rounded-2xl p-3 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+      <div class="bg-white rounded-2xl border border-[#dadce0] p-3 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
         <div class="flex items-center gap-3">
-          <div class="pph-icon-primary w-8 h-8 rounded-full flex items-center justify-center font-bold">
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
             <i data-lucide="file-text" class="w-4 h-4"></i>
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span id="display-paper-label" class="text-xs font-semibold pph-text">A4 (210 × 297 mm)</span>
-              <span style="color:var(--pph-border-2)">·</span>
-              <span id="display-photo-dim-label" class="text-xs font-medium pph-text-2">35 × 45 mm</span>
+              <span id="display-paper-label" class="text-xs font-semibold text-[#202124]">A4 (210 × 297 mm)</span>
+              <span class="text-[#dadce0]">·</span>
+              <span id="display-photo-dim-label" class="text-xs font-medium text-[#5f6368]">35 × 45 mm</span>
             </div>
-            <p id="display-resolution-label" class="text-[11px] font-mono pph-text-3 tabular-nums">2480 × 3508 px @ 300 DPI</p>
+            <p id="display-resolution-label" class="text-[11px] font-mono text-[#9aa0a6] tabular-nums">2480 × 3508 px @ 300 DPI</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 rounded-full p-1" style="background-color:var(--pph-surface-2); border:1px solid var(--pph-border)">
-          <span class="text-[11px] font-semibold pph-text-2 px-2">Copies:</span>
-          <button type="button" id="btn-quick-minus" class="w-6 h-6 rounded-full font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none pph-text hover:bg-black/30" style="background-color:var(--pph-surface-3)" title="Decrease photo copies (-1)">
+        <div class="flex items-center gap-1.5 bg-[#f1f3f4] border border-[#dadce0] rounded-full p-1">
+          <span class="text-[11px] font-semibold text-[#5f6368] px-2">Copies:</span>
+          <button type="button" id="btn-quick-minus" class="w-6 h-6 rounded-full bg-white hover:bg-[#e8eaed] active:bg-[#dadce0] text-[#202124] font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none" title="Decrease photo copies (-1)">
             −
           </button>
-          <span id="quick-copies-display" class="font-mono font-bold text-xs pph-link px-1.5 min-w-[24px] text-center tabular-nums">4</span>
-          <button type="button" id="btn-quick-plus" class="w-6 h-6 rounded-full font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none pph-text hover:bg-black/30" style="background-color:var(--pph-surface-3)" title="Add photo copy (+1)">
+          <span id="quick-copies-display" class="font-mono font-bold text-xs text-blue-700 px-1.5 min-w-[24px] text-center tabular-nums">4</span>
+          <button type="button" id="btn-quick-plus" class="w-6 h-6 rounded-full bg-white hover:bg-[#e8eaed] active:bg-[#dadce0] text-[#202124] font-black text-xs flex items-center justify-center transition-colors shadow-sm select-none" title="Add photo copy (+1)">
             +
           </button>
-          <button type="button" id="btn-quick-add-row" class="text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap transition-colors" style="color:var(--pph-primary); background-color:rgba(138,180,248,.12); border:1px solid rgba(138,180,248,.30)" title="Add 1 full row (+6 photos)">
+          <button type="button" id="btn-quick-add-row" class="text-[10px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 transition-colors whitespace-nowrap" title="Add 1 full row (+6 photos)">
             +6 Row
           </button>
         </div>
 
         <div class="flex items-center gap-2">
-          <div id="page-nav-controls" class="hidden items-center gap-1 rounded-full mr-2 p-0.5" style="background-color:var(--pph-surface-2); border:1px solid var(--pph-border)">
-            <button type="button" id="btn-prev-page" class="p-1 rounded-full pph-text-2 hover:pph-text disabled:opacity-30" title="Previous Sheet">
+          <div id="page-nav-controls" class="hidden items-center gap-1 bg-[#f1f3f4] p-0.5 rounded-full border border-[#dadce0] mr-2">
+            <button type="button" id="btn-prev-page" class="p-1 rounded-full text-[#5f6368] hover:text-[#202124] disabled:opacity-30" title="Previous Sheet">
               <i data-lucide="chevron-left" class="w-4 h-4"></i>
             </button>
-            <span class="text-[11px] font-mono px-2 pph-text font-semibold" id="page-indicator">1 / 1</span>
-            <button type="button" id="btn-next-page" class="p-1 rounded-full pph-text-2 hover:pph-text disabled:opacity-30" title="Next Sheet">
+            <span class="text-[11px] font-mono px-2 text-[#3c4043] font-semibold" id="page-indicator">1 / 1</span>
+            <button type="button" id="btn-next-page" class="p-1 rounded-full text-[#5f6368] hover:text-[#202124] disabled:opacity-30" title="Next Sheet">
               <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
           </div>
 
-          <div class="flex items-center gap-1 rounded-full p-0.5" style="background-color:var(--pph-surface-2); border:1px solid var(--pph-border)">
-            <button type="button" id="btn-zoom-out" class="p-1.5 rounded-full pph-text-2 hover:pph-text hover:bg-black/30" title="Zoom Out">
+          <div class="flex items-center gap-1 bg-[#f1f3f4] p-0.5 rounded-full border border-[#dadce0]">
+            <button type="button" id="btn-zoom-out" class="p-1.5 rounded-full text-[#5f6368] hover:text-[#202124] hover:bg-white" title="Zoom Out">
               <i data-lucide="minus" class="w-3.5 h-3.5"></i>
             </button>
-            <span id="zoom-level-text" class="text-[11px] font-mono px-1.5 pph-text font-medium tabular-nums">Fit</span>
-            <button type="button" id="btn-zoom-in" class="p-1.5 rounded-full pph-text-2 hover:pph-text hover:bg-black/30" title="Zoom In">
+            <span id="zoom-level-text" class="text-[11px] font-mono px-1.5 text-[#3c4043] font-medium tabular-nums">Fit</span>
+            <button type="button" id="btn-zoom-in" class="p-1.5 rounded-full text-[#5f6368] hover:text-[#202124] hover:bg-white" title="Zoom In">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i>
             </button>
-            <button type="button" id="btn-zoom-fit" class="p-1.5 rounded-full pph-text-2 hover:pph-text hover:bg-black/30 text-xs font-semibold px-2" title="Fit to Screen">
+            <button type="button" id="btn-zoom-fit" class="p-1.5 rounded-full text-[#5f6368] hover:text-[#202124] hover:bg-white text-xs font-semibold px-2" title="Fit to Screen">
               Fit
             </button>
-            <button type="button" id="btn-zoom-100" class="p-1.5 rounded-full pph-text-2 hover:pph-text hover:bg-black/30 text-xs font-semibold px-2" title="100% Scale">
+            <button type="button" id="btn-zoom-100" class="p-1.5 rounded-full text-[#5f6368] hover:text-[#202124] hover:bg-white text-xs font-semibold px-2" title="100% Scale">
               100%
             </button>
           </div>
         </div>
       </div>
 
-      <div id="preview-viewport" class="relative w-full h-[580px] xl:h-[640px] rounded-2xl overflow-hidden flex items-center justify-center p-4 checker-pattern select-none cursor-grab active:cursor-grabbing" style="border:1px solid var(--pph-border)">
+      <div id="preview-viewport" class="relative w-full h-[580px] xl:h-[640px] bg-[#e8eaed]/60 rounded-2xl border border-[#dadce0] overflow-hidden flex items-center justify-center p-4 checker-pattern select-none cursor-grab active:cursor-grabbing">
         <div id="canvas-wrapper" class="relative transition-transform duration-75 origin-center">
-          <canvas id="sheet-preview-canvas" class="bg-white shadow-2xl rounded-md block" style="border:1px solid var(--pph-border)"></canvas>
+          <canvas id="sheet-preview-canvas" class="bg-white shadow-2xl rounded-md block border border-[#dadce0]"></canvas>
         </div>
 
-        <div id="rendering-spinner" class="hidden absolute inset-0 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-30 pph-empty-overlay">
-          <div class="w-9 h-9 rounded-full animate-spin" style="border:3px solid var(--pph-primary); border-top-color:transparent"></div>
-          <p id="spinner-msg" class="text-xs font-semibold pph-text">Rendering 300 DPI Sheet...</p>
+        <div id="rendering-spinner" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-30">
+          <div class="w-9 h-9 border-[3px] border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <p id="spinner-msg" class="text-xs font-semibold text-[#202124]">Rendering 300 DPI Sheet...</p>
         </div>
 
-        <div id="canvas-empty-overlay" class="pph-empty-overlay absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-20">
-          <div class="pph-icon-primary w-14 h-14 rounded-full flex items-center justify-center mb-3">
+        <div id="canvas-empty-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 text-center p-6 z-20">
+          <div class="w-14 h-14 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
             <i data-lucide="layout-grid" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-base font-semibold pph-text mb-1">Your Print Sheet Will Appear Here</h3>
-          <p class="text-xs pph-text-2 max-w-sm mb-4">
+          <h3 class="text-base font-semibold text-[#202124] mb-1">Your Print Sheet Will Appear Here</h3>
+          <p class="text-xs text-[#5f6368] max-w-sm mb-4">
             Upload your portrait photo or click the sample button to generate real-time preview and 300 DPI exports.
           </p>
           <div class="flex items-center gap-3">
-            <button type="button" id="btn-load-sample-canvas" class="pph-btn-primary px-4 py-2 text-xs rounded-full shadow-sm flex items-center gap-1.5">
+            <button type="button" id="btn-load-sample-canvas" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full shadow-sm transition-colors flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-4 h-4"></i>
               <span>Load Sample Portrait</span>
             </button>
-            <button type="button" id="btn-upload-canvas" class="pph-btn-tonal px-4 py-2 text-xs rounded-full cursor-pointer flex items-center gap-1.5">
+            <button type="button" id="btn-upload-canvas" class="px-4 py-2 bg-white border border-[#dadce0] hover:bg-[#f8f9fa] text-[#3c4043] text-xs font-medium rounded-full transition-colors cursor-pointer flex items-center gap-1.5">
               <i data-lucide="folder-open" class="w-4 h-4"></i>
               <span>Browse From Computer</span>
             </button>
@@ -849,32 +670,32 @@
         </div>
       </div>
 
-      <div class="pph-card rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3 text-xs pph-text-2">
-          <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color:var(--pph-success)"></div>
+      <div class="bg-white rounded-2xl border border-[#dadce0] p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3 text-xs text-[#5f6368]">
+          <div class="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0"></div>
           <div>
-            <span class="font-semibold pph-text">300 DPI Studio Quality</span>
-            <span class="pph-text-3 block text-[11px]">Ready for commercial &amp; home photo printers</span>
+            <span class="font-semibold text-[#202124]">300 DPI Studio Quality</span>
+            <span class="text-[#9aa0a6] block text-[11px]">Ready for commercial &amp; home photo printers</span>
           </div>
         </div>
 
         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
-          <button type="button" id="btn-export-single" class="pph-btn-tonal px-3.5 py-2 text-xs rounded-full flex items-center gap-1.5" title="Export current cropped photo as single 300 DPI file">
-            <i data-lucide="user" class="w-4 h-4"></i>
+          <button type="button" id="btn-export-single" class="px-3.5 py-2 text-xs font-medium text-[#3c4043] bg-[#f1f3f4] hover:bg-[#e8eaed] rounded-full transition-colors flex items-center gap-1.5" title="Export current cropped photo as single 300 DPI file">
+            <i data-lucide="user" class="w-4 h-4 text-[#5f6368]"></i>
             <span>Single Photo</span>
           </button>
 
-          <button type="button" id="btn-export-png" class="pph-btn-tonal px-3.5 py-2 text-xs rounded-full flex items-center gap-1.5" title="Export entire sheet as lossless PNG">
-            <i data-lucide="image" class="w-4 h-4"></i>
+          <button type="button" id="btn-export-png" class="px-3.5 py-2 text-xs font-medium text-[#3c4043] bg-[#f1f3f4] hover:bg-[#e8eaed] rounded-full transition-colors flex items-center gap-1.5" title="Export entire sheet as lossless PNG">
+            <i data-lucide="image" class="w-4 h-4 text-[#5f6368]"></i>
             <span>Export PNG</span>
           </button>
 
-          <button type="button" id="btn-export-jpeg" class="pph-btn-tonal px-3.5 py-2 text-xs rounded-full flex items-center gap-1.5" title="Export entire sheet as high-res JPEG">
-            <i data-lucide="file-image" class="w-4 h-4"></i>
+          <button type="button" id="btn-export-jpeg" class="px-3.5 py-2 text-xs font-medium text-[#3c4043] bg-[#f1f3f4] hover:bg-[#e8eaed] rounded-full transition-colors flex items-center gap-1.5" title="Export entire sheet as high-res JPEG">
+            <i data-lucide="file-image" class="w-4 h-4 text-[#5f6368]"></i>
             <span>Export JPEG</span>
           </button>
 
-          <button type="button" id="btn-export-pdf" class="pph-btn-primary px-5 py-2 text-xs rounded-full shadow-sm flex items-center gap-2" title="Generate print-ready PDF at exact physical dimensions">
+          <button type="button" id="btn-export-pdf" class="px-5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow-sm transition-all flex items-center gap-2" title="Generate print-ready PDF at exact physical dimensions">
             <i data-lucide="download" class="w-4 h-4"></i>
             <span>Export PDF (300 DPI)</span>
           </button>
@@ -885,219 +706,224 @@
 
   </main>
 
-  <!-- ========== MODALS ========== -->
+  <!-- ========== MODALS (unchanged structure, Google-styled) ========== -->
 
-  <dialog id="modal-specs" class="pph-card rounded-3xl p-0 max-w-xl w-full shadow-2xl">
+  <!-- Dimension Specs -->
+  <dialog id="modal-specs" class="rounded-3xl p-0 max-w-xl w-full backdrop:bg-[#202124]/50 shadow-2xl border border-[#dadce0]">
     <div class="p-6 flex flex-col gap-4">
-      <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid var(--pph-border)">
+      <div class="flex items-center justify-between pb-3 border-b border-[#f1f3f4]">
         <div class="flex items-center gap-2.5">
-          <div class="pph-icon-primary w-8 h-8 rounded-full flex items-center justify-center font-bold">
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
             <i data-lucide="book-open" class="w-4 h-4"></i>
           </div>
-          <h2 class="text-base font-semibold pph-text">Standard Passport &amp; Visa Dimensions</h2>
+          <h2 class="text-base font-semibold text-[#202124]">Standard Passport &amp; Visa Dimensions</h2>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 pph-text-2 hover:pph-text rounded-full hover:bg-black/30">
+        <button type="button" class="btn-close-modal p-1.5 text-[#9aa0a6] hover:text-[#5f6368] rounded-full hover:bg-[#f1f3f4]">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="text-xs pph-text-2 space-y-3 leading-relaxed">
+      <div class="text-xs text-[#5f6368] space-y-3 leading-relaxed">
         <p>The table below summarizes official physical dimensions by country. Always verify latest rules with official consular services.</p>
 
-        <div class="rounded-2xl overflow-hidden" style="border:1px solid var(--pph-border)">
+        <div class="border border-[#dadce0] rounded-2xl overflow-hidden">
           <table class="w-full text-left text-xs">
-            <thead class="pph-card-sub" style="border-bottom:1px solid var(--pph-border)">
-              <tr class="pph-text font-semibold">
+            <thead class="bg-[#f8f9fa] border-b border-[#dadce0] text-[#3c4043] font-semibold">
+              <tr>
                 <th class="p-2.5">Country / Region</th>
                 <th class="p-2.5">Dimensions</th>
                 <th class="p-2.5">Head Size</th>
                 <th class="p-2.5">Background</th>
               </tr>
             </thead>
-            <tbody>
-              <tr style="border-bottom:1px solid var(--pph-border)">
-                <td class="p-2.5 font-medium pph-text">United States (Passport / Visa)</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">50.8 × 50.8 mm (2 × 2 in)</td>
-                <td class="p-2.5 pph-text-2">25 – 35 mm (50-69%)</td>
-                <td class="p-2.5 pph-text-2">Plain White</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--pph-border)">
-                <td class="p-2.5 font-medium pph-text">United Kingdom (Passport)</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">35 × 45 mm</td>
-                <td class="p-2.5 pph-text-2">29 – 34 mm</td>
-                <td class="p-2.5 pph-text-2">Light Gray / Off-white</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--pph-border)">
-                <td class="p-2.5 font-medium pph-text">Schengen Europe / France / Germany</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">35 × 45 mm</td>
-                <td class="p-2.5 pph-text-2">32 – 36 mm (70-80%)</td>
-                <td class="p-2.5 pph-text-2">Light Gray / Neutral</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--pph-border)">
-                <td class="p-2.5 font-medium pph-text">India (Passport &amp; Visa)</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">35 × 45 mm / 50 × 50 mm</td>
-                <td class="p-2.5 pph-text-2">30 – 35 mm</td>
-                <td class="p-2.5 pph-text-2">Plain White</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--pph-border)">
-                <td class="p-2.5 font-medium pph-text">Australia / New Zealand</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">35 × 45 mm</td>
-                <td class="p-2.5 pph-text-2">32 – 36 mm</td>
-                <td class="p-2.5 pph-text-2">Plain White / Neutral</td>
+            <tbody class="divide-y divide-[#f1f3f4]">
+              <tr>
+                <td class="p-2.5 font-medium">United States (Passport / Visa)</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">50.8 × 50.8 mm (2 × 2 in)</td>
+                <td class="p-2.5">25 – 35 mm (50-69%)</td>
+                <td class="p-2.5">Plain White</td>
               </tr>
               <tr>
-                <td class="p-2.5 font-medium pph-text">Canada (Passport)</td>
-                <td class="p-2.5 font-mono font-semibold pph-link">50 × 70 mm</td>
-                <td class="p-2.5 pph-text-2">31 – 36 mm</td>
-                <td class="p-2.5 pph-text-2">Plain White / Light</td>
+                <td class="p-2.5 font-medium">United Kingdom (Passport)</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">35 × 45 mm</td>
+                <td class="p-2.5">29 – 34 mm</td>
+                <td class="p-2.5">Light Gray / Off-white</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-medium">Schengen Europe / France / Germany</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">35 × 45 mm</td>
+                <td class="p-2.5">32 – 36 mm (70-80%)</td>
+                <td class="p-2.5">Light Gray / Neutral</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-medium">India (Passport &amp; Visa)</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">35 × 45 mm / 50 × 50 mm</td>
+                <td class="p-2.5">30 – 35 mm</td>
+                <td class="p-2.5">Plain White</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-medium">Australia / New Zealand</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">35 × 45 mm</td>
+                <td class="p-2.5">32 – 36 mm</td>
+                <td class="p-2.5">Plain White / Neutral</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-medium">Canada (Passport)</td>
+                <td class="p-2.5 font-mono text-blue-700 font-semibold">50 × 70 mm</td>
+                <td class="p-2.5">31 – 36 mm</td>
+                <td class="p-2.5">Plain White / Light</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <div class="pt-3 flex justify-end" style="border-top:1px solid var(--pph-border)">
-        <button type="button" class="btn-close-modal pph-btn-primary px-5 py-2 text-xs rounded-full">
+      <div class="pt-3 border-t border-[#f1f3f4] flex justify-end">
+        <button type="button" class="btn-close-modal px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full">
           Close Guide
         </button>
       </div>
     </div>
   </dialog>
 
-  <dialog id="modal-print-guide" class="pph-card rounded-3xl p-0 max-w-lg w-full shadow-2xl">
+  <!-- Print Guide -->
+  <dialog id="modal-print-guide" class="rounded-3xl p-0 max-w-lg w-full backdrop:bg-[#202124]/50 shadow-2xl border border-[#dadce0]">
     <div class="p-6 flex flex-col gap-4">
-      <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid var(--pph-border)">
+      <div class="flex items-center justify-between pb-3 border-b border-[#f1f3f4]">
         <div class="flex items-center gap-2.5">
-          <div class="pph-icon-warning w-8 h-8 rounded-full flex items-center justify-center font-bold">
+          <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
             <i data-lucide="printer" class="w-4 h-4"></i>
           </div>
-          <h2 class="text-base font-semibold pph-text">Printing Calibration Checklist</h2>
+          <h2 class="text-base font-semibold text-[#202124]">Printing Calibration Checklist</h2>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 pph-text-2 hover:pph-text rounded-full hover:bg-black/30">
+        <button type="button" class="btn-close-modal p-1.5 text-[#9aa0a6] hover:text-[#5f6368] rounded-full hover:bg-[#f1f3f4]">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="text-xs pph-text-2 space-y-3 leading-relaxed">
-        <div class="p-3 rounded-xl font-medium pph-chip-warning">
+      <div class="text-xs text-[#5f6368] space-y-3 leading-relaxed">
+        <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200 font-medium">
           ⚠️ Common mistake: Most printer dialogs default to "Fit to Printable Area" which shrinks passport photos by 3% to 6%, making them non-compliant.
         </div>
 
         <ol class="list-decimal pl-4 space-y-2">
-          <li><strong class="pph-text">Scale Setting:</strong> Always choose <strong class="pph-text">100%</strong> or <strong class="pph-text">"Actual Size"</strong> in your browser or Adobe Acrobat print dialog.</li>
-          <li><strong class="pph-text">Paper Matching:</strong> Ensure the paper loaded in the tray matches your chosen sheet format (A4 or 4×6 photo paper).</li>
-          <li><strong class="pph-text">Paper Quality:</strong> Use glossy or matte photo paper (recommended 180–240 gsm) rather than standard thin copy paper.</li>
-          <li><strong class="pph-text">Ruler Verification:</strong> After printing, use a physical millimeter ruler to measure your printed photos. A 35×45mm photo must measure exactly 3.5cm wide by 4.5cm high.</li>
+          <li><strong>Scale Setting:</strong> Always choose <strong>100%</strong> or <strong>"Actual Size"</strong> in your browser or Adobe Acrobat print dialog.</li>
+          <li><strong>Paper Matching:</strong> Ensure the paper loaded in the tray matches your chosen sheet format (A4 or 4×6 photo paper).</li>
+          <li><strong>Paper Quality:</strong> Use glossy or matte photo paper (recommended 180–240 gsm) rather than standard thin copy paper.</li>
+          <li><strong>Ruler Verification:</strong> After printing, use a physical millimeter ruler to measure your printed photos. A 35×45mm photo must measure exactly 3.5cm wide by 4.5cm high.</li>
         </ol>
       </div>
 
-      <div class="pt-3 flex justify-end" style="border-top:1px solid var(--pph-border)">
-        <button type="button" class="btn-close-modal pph-btn-primary px-5 py-2 text-xs rounded-full">
+      <div class="pt-3 border-t border-[#f1f3f4] flex justify-end">
+        <button type="button" class="btn-close-modal px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full">
           Understood, Close
         </button>
       </div>
     </div>
   </dialog>
 
-  <dialog id="modal-confirm-clear" class="pph-card rounded-3xl p-0 max-w-sm w-full shadow-2xl">
+  <!-- Confirm Clear -->
+  <dialog id="modal-confirm-clear" class="rounded-3xl p-0 max-w-sm w-full backdrop:bg-[#202124]/50 shadow-2xl border border-[#dadce0]">
     <div class="p-6 flex flex-col gap-4 text-center">
-      <div class="pph-icon-error w-12 h-12 rounded-full mx-auto flex items-center justify-center">
+      <div class="w-12 h-12 rounded-full bg-red-50 text-[#d93025] mx-auto flex items-center justify-center">
         <i data-lucide="alert-triangle" class="w-6 h-6"></i>
       </div>
       <div>
-        <h2 class="text-base font-semibold pph-text">Clear All Photos?</h2>
-        <p class="text-xs pph-text-2 mt-1">This will remove all uploaded photos and reset your sheets. Memory and temporary URLs will be freed immediately.</p>
+        <h2 class="text-base font-semibold text-[#202124]">Clear All Photos?</h2>
+        <p class="text-xs text-[#5f6368] mt-1">This will remove all uploaded photos and reset your sheets. Memory and temporary URLs will be freed immediately.</p>
       </div>
       <div class="flex items-center justify-center gap-3 pt-2">
-        <button type="button" class="btn-close-modal pph-btn-tonal flex-1 px-4 py-2 text-xs rounded-full">
+        <button type="button" class="btn-close-modal flex-1 px-4 py-2 bg-[#f1f3f4] hover:bg-[#e8eaed] text-[#3c4043] text-xs font-medium rounded-full">
           Cancel
         </button>
-        <button type="button" id="btn-confirm-clear-action" class="pph-btn-danger-fill flex-1 px-4 py-2 text-xs rounded-full">
+        <button type="button" id="btn-confirm-clear-action" class="flex-1 px-4 py-2 bg-[#d93025] hover:bg-[#b3261e] text-white text-xs font-medium rounded-full">
           Yes, Clear All
         </button>
       </div>
     </div>
   </dialog>
 
-  <dialog id="modal-rename" class="pph-card rounded-3xl p-0 max-w-sm w-full shadow-2xl">
+  <!-- Rename -->
+  <dialog id="modal-rename" class="rounded-3xl p-0 max-w-sm w-full backdrop:bg-[#202124]/50 shadow-2xl border border-[#dadce0]">
     <form method="dialog" id="form-rename" class="p-6 flex flex-col gap-4">
-      <div class="flex items-center justify-between pb-2" style="border-bottom:1px solid var(--pph-border)">
+      <div class="flex items-center justify-between pb-2 border-b border-[#f1f3f4]">
         <div class="flex items-center gap-2">
-          <div class="pph-icon-primary w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs">
+          <div class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
           </div>
-          <h3 class="text-sm font-semibold pph-text">Rename Person</h3>
+          <h3 class="text-sm font-semibold text-[#202124]">Rename Person</h3>
         </div>
-        <button type="button" class="btn-close-modal p-1 pph-text-2 hover:pph-text rounded-full hover:bg-black/30">
+        <button type="button" class="btn-close-modal p-1 text-[#9aa0a6] hover:text-[#5f6368] rounded-full hover:bg-[#f1f3f4]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
       <div>
-        <label class="text-xs font-semibold pph-text block mb-1.5">Person / Photo Label</label>
-        <input type="text" id="input-rename-person" maxlength="60" class="pph-input w-full text-xs rounded-xl p-2.5 font-medium" placeholder="e.g. John Doe, Visa Photo" required />
+        <label class="text-xs font-semibold text-[#3c4043] block mb-1.5">Person / Photo Label</label>
+        <input type="text" id="input-rename-person" maxlength="60" class="w-full text-xs border border-[#dadce0] rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-[#202124]" placeholder="e.g. John Doe, Visa Photo" required />
       </div>
       <div class="flex items-center justify-end gap-2 pt-2">
-        <button type="button" class="btn-close-modal pph-btn-tonal px-4 py-1.5 text-xs rounded-full">Cancel</button>
-        <button type="submit" id="btn-save-rename" class="pph-btn-primary px-4 py-1.5 text-xs rounded-full shadow-sm">Save Name</button>
+        <button type="button" class="btn-close-modal px-4 py-1.5 bg-[#f1f3f4] hover:bg-[#e8eaed] text-[#3c4043] text-xs font-medium rounded-full">Cancel</button>
+        <button type="submit" id="btn-save-rename" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-full shadow-sm">Save Name</button>
       </div>
     </form>
   </dialog>
 
-  <dialog id="modal-default-settings" class="pph-card rounded-3xl p-0 max-w-md w-full shadow-2xl">
+  <!-- Default Settings -->
+  <dialog id="modal-default-settings" class="rounded-3xl p-0 max-w-md w-full backdrop:bg-[#202124]/50 shadow-2xl border border-[#dadce0]">
     <div class="p-6 flex flex-col gap-4">
-      <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid var(--pph-border)">
+      <div class="flex items-center justify-between pb-3 border-b border-[#f1f3f4]">
         <div class="flex items-center gap-2.5">
-          <div class="pph-icon-primary w-8 h-8 rounded-full flex items-center justify-center font-bold">
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
             <i data-lucide="bookmark-check" class="w-4 h-4"></i>
           </div>
           <div>
-            <h2 class="text-base font-semibold pph-text">My Default Settings</h2>
-            <p class="text-[11px] pph-text-2 font-medium">Preserved &amp; auto-applied whenever you load or switch photos</p>
+            <h2 class="text-base font-semibold text-[#202124]">My Default Settings</h2>
+            <p class="text-[11px] text-[#5f6368] font-medium">Preserved &amp; auto-applied whenever you load or switch photos</p>
           </div>
         </div>
-        <button type="button" class="btn-close-modal p-1.5 pph-text-2 hover:pph-text rounded-full hover:bg-black/30">
+        <button type="button" class="btn-close-modal p-1.5 text-[#9aa0a6] hover:text-[#5f6368] rounded-full hover:bg-[#f1f3f4]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="rounded-2xl p-3.5 space-y-2 text-xs" style="background-color:rgba(138,180,248,.08); border:1px solid rgba(138,180,248,.25)">
-        <div class="flex items-center justify-between font-semibold border-b pb-1.5" style="border-color:rgba(138,180,248,.20); color:var(--pph-primary)">
+      <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-3.5 space-y-2 text-xs">
+        <div class="flex items-center justify-between font-semibold text-blue-900 border-b border-blue-100 pb-1.5">
           <span>Current Preserved Configuration</span>
-          <span class="pph-chip-success text-[10px] px-2 py-0.5 rounded-full font-semibold">Saved in Browser</span>
+          <span class="text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-semibold">Saved in Browser</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 pt-0.5 pph-text-2">
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Default Copies</span> <strong id="modal-default-copies" class="pph-text font-mono">4</strong></div>
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Dimensions</span> <strong id="modal-default-preset" class="pph-text">35 × 45 mm</strong></div>
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Paper Size</span> <strong id="modal-default-paper" class="pph-text">A4 (Portrait)</strong></div>
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Border Style</span> <strong id="modal-default-border" class="pph-text">0.3 mm (Black)</strong></div>
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Sheet Margin</span> <strong id="modal-default-margin" class="pph-text font-mono">10 mm</strong></div>
-          <div><span class="pph-text-3 block text-[10px] uppercase font-bold">Photo Spacing</span> <strong id="modal-default-spacing" class="pph-text font-mono">3 mm</strong></div>
+        <div class="grid grid-cols-2 gap-2 text-[#5f6368] pt-0.5">
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Default Copies</span> <strong id="modal-default-copies" class="text-[#202124] font-mono">4</strong></div>
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Dimensions</span> <strong id="modal-default-preset" class="text-[#202124]">35 × 45 mm</strong></div>
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Paper Size</span> <strong id="modal-default-paper" class="text-[#202124]">A4 (Portrait)</strong></div>
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Border Style</span> <strong id="modal-default-border" class="text-[#202124]">0.3 mm (Black)</strong></div>
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Sheet Margin</span> <strong id="modal-default-margin" class="text-[#202124] font-mono">10 mm</strong></div>
+          <div><span class="text-[#9aa0a6] block text-[10px] uppercase font-bold">Photo Spacing</span> <strong id="modal-default-spacing" class="text-[#202124] font-mono">3 mm</strong></div>
         </div>
       </div>
 
-      <label class="flex items-start gap-2.5 p-3 rounded-2xl cursor-pointer text-xs select-none pph-card-sub">
-        <input type="checkbox" id="toggle-auto-preserve" checked class="mt-0.5 w-4 h-4 rounded" />
+      <label class="flex items-start gap-2.5 p-3 rounded-2xl border border-[#dadce0] hover:bg-[#f8f9fa] cursor-pointer text-xs select-none">
+        <input type="checkbox" id="toggle-auto-preserve" checked class="mt-0.5 w-4 h-4 text-blue-600 rounded border-[#dadce0] focus:ring-blue-500" />
         <div>
-          <span class="font-semibold pph-text block">Auto-Preserve settings as default</span>
-          <span class="text-[11px] pph-text-2 leading-snug block">When you tweak copies, preset sizes, borders, or margins, automatically update your saved defaults for all next photos.</span>
+          <span class="font-semibold text-[#202124] block">Auto-Preserve settings as default</span>
+          <span class="text-[11px] text-[#5f6368] leading-snug block">When you tweak copies, preset sizes, borders, or margins, automatically update your saved defaults for all next photos.</span>
         </div>
       </label>
 
-      <div class="flex flex-col gap-2 pt-2" style="border-top:1px solid var(--pph-border)">
+      <div class="flex flex-col gap-2 pt-2 border-t border-[#f1f3f4]">
         <div class="flex items-center gap-2">
-          <button type="button" id="btn-save-current-as-defaults-modal" class="pph-btn-primary flex-1 py-2 px-3 text-xs rounded-full shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+          <button type="button" id="btn-save-current-as-defaults-modal" class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-medium rounded-full shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer">
             <i data-lucide="save" class="w-3.5 h-3.5"></i>
             <span>Save Current Settings as Default</span>
           </button>
-          <button type="button" id="btn-apply-defaults-to-photo" class="pph-btn-tonal py-2 px-3 text-xs rounded-full cursor-pointer" title="Reset active photo to saved defaults">
+          <button type="button" id="btn-apply-defaults-to-photo" class="py-2 px-3 bg-white border border-[#dadce0] hover:bg-[#f8f9fa] active:scale-95 text-[#3c4043] text-xs font-medium rounded-full transition-all cursor-pointer" title="Reset active photo to saved defaults">
             Apply to Active Photo
           </button>
         </div>
         <div class="flex items-center justify-between pt-1">
-          <button type="button" id="btn-reset-factory-defaults" class="text-[11px] font-medium cursor-pointer" style="color:var(--pph-error)">
+          <button type="button" id="btn-reset-factory-defaults" class="text-[11px] text-[#d93025] hover:text-[#b3261e] font-medium cursor-pointer">
             Reset to Standard Defaults
           </button>
-          <button type="button" class="btn-close-modal pph-btn-tonal px-4 py-1.5 text-xs rounded-full cursor-pointer">
+          <button type="button" class="btn-close-modal px-4 py-1.5 bg-[#f1f3f4] hover:bg-[#e8eaed] text-[#3c4043] text-xs font-medium rounded-full cursor-pointer">
             Done
           </button>
         </div>
