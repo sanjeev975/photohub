@@ -6,16 +6,40 @@
 <title>Contact | PassportPhoto Hub</title>
 <meta name="description" content="Contact PassportPhoto Hub for support, payment help, refunds or data requests.">
 <meta name="robots" content="index,follow">
-<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="legal.css">
 </head>
-<body class="bg-white text-slate-700 antialiased">
-<main class="max-w-2xl mx-auto px-4 py-10 leading-relaxed text-sm">
-<a href="/" class="text-xs font-semibold text-indigo-700 hover:text-indigo-900">&larr; Back to PassportPhoto Hub</a>
-<h1 class="text-2xl font-bold text-slate-900 mt-4">Contact</h1>
-<p class="text-xs text-slate-500 mt-1">Last updated: 23 October 2026</p>
-<p class="mt-2"><strong>{{BUSINESS}}</strong></p><ul class="list-disc pl-5 mt-2 space-y-1"><li>Email: <strong>{{EMAIL}}</strong></li><li>Location: {{CITY}}, India</li><li>Support hours: {{HOURS}}</li></ul><h2 class="text-base font-bold text-slate-900 mt-8 mb-2">When you write to us about a payment</h2><p class="mt-2">Please include the <strong>UTR</strong> and the <strong>mobile number or email</strong> you entered. We cannot see your photos, so you do not need to send them.</p><h2 class="text-base font-bold text-slate-900 mt-8 mb-2">Typical reply time</h2><p class="mt-2">Within 1 to 3 working days. Payment confirmations are checked manually and may take longer outside support hours.</p><h2 class="text-base font-bold text-slate-900 mt-8 mb-2">Data requests</h2><p class="mt-2">To access, correct or delete your data, write to the same address. See the <a class="underline text-indigo-700" href="/privacy">Privacy Policy</a>.</p>
-<nav class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 mt-10 pt-4 border-t border-slate-200">
-<a class="hover:text-indigo-700 underline" href="/">App</a><a class="hover:text-indigo-700 underline" href="/privacy">Privacy</a><a class="hover:text-indigo-700 underline" href="/terms">Terms</a><a class="hover:text-indigo-700 underline" href="/refund">Refunds</a><a class="hover:text-indigo-700 underline" href="/contact">Contact</a></nav>
-</main>
+<body class="legal">
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="/" aria-label="PassportPhoto Hub home"><span class="logo" aria-hidden="true"></span><span>PassportPhoto Hub</span></a>
+    <nav class="tabs" aria-label="Legal"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund">Refunds</a><a href="/contact" class=on aria-current=page>Contact</a></nav>
+    <a class="btn" href="/">Open app</a>
+  </div>
+</header>
+<div class="hero"><div class="hero-in">
+  <p class="eyebrow">Privacy &amp; Terms</p>
+  <h1>Contact</h1>
+  <p class="meta">Last updated 23 October 2026</p>
+</div></div>
+<div class="wrap">
+  <aside class="toc" aria-label="On this page">
+    <details open><summary>On this page</summary><nav><a href="#when-you-write-to-us-about-a-payment">When you write to us about a payment</a><a href="#typical-reply-time">Typical reply time</a><a href="#data-requests">Data requests</a></nav></details>
+  </aside>
+  <main class="doc">
+    <section class="short" aria-label="The short version">
+      <h2 class="short-t">The short version</h2>
+      <ul><li>Email us any time; we reply within 1–3 working days.</li><li>For payment help, include your UTR and the contact you entered.</li><li>We cannot see your photos, so never send them.</li></ul>
+    </section>
+    <p><strong>{{BUSINESS}}</strong></p><ul><li>Email: <strong>{{EMAIL}}</strong></li><li>Location: {{CITY}}, India</li><li>Support hours: {{HOURS}}</li></ul><h2 id="when-you-write-to-us-about-a-payment">When you write to us about a payment</h2><p>Please include the <strong>UTR</strong> and the <strong>mobile number or email</strong> you entered. We cannot see your photos, so you do not need to send them.</p><h2 id="typical-reply-time">Typical reply time</h2><p>Within 1 to 3 working days. Payment confirmations are checked manually and may take longer outside support hours.</p><h2 id="data-requests">Data requests</h2><p>To access, correct or delete your data, write to the same address. See the <a href="/privacy">Privacy Policy</a>.</p>
+  </main>
+</div>
+<footer class="foot"><div class="foot-in">
+  <span>&copy; {{BUSINESS}}</span>
+  <nav><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund">Refunds</a><a href="/contact">Contact</a><a href="/">App</a></nav>
+</div></footer>
+<script src="legal.js"></script>
 </body>
 </html>

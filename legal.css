@@ -1,0 +1,68 @@
+/* Standalone stylesheet for the legal pages (Google-style, Material look). Independent of styles.css so the app's locked-height layout never affects scrolling here. */
+:root{--blue:#1a73e8;--blue-d:#1765cc;--ink:#202124;--sub:#5f6368;--line:#dadce0;--bg:#fff;--soft:#f8f9fa;--tint:#e8f0fe;--hdr:64px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hdr) + 16px);-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body.legal{margin:0;height:auto;min-height:100%;overflow:visible;overflow-y:auto;background:var(--bg);color:var(--sub);font:400 16px/1.7 Roboto,"Open Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1120px;margin:0 auto;height:var(--hdr);padding:0 24px;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);font:500 18px/1 Roboto,Arial,sans-serif;white-space:nowrap}
+.brand:hover{text-decoration:none}
+.logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 210deg,#4285f4 0 25%,#34a853 0 50%,#fbbc04 0 75%,#ea4335 0);position:relative}
+.logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
+.tabs{display:flex;gap:4px;margin-left:8px;height:100%;flex:1}
+.tabs a{display:flex;align-items:center;padding:0 16px;color:var(--sub);font:500 14px/1 Roboto,Arial,sans-serif;border-bottom:3px solid transparent;margin-top:3px}
+.tabs a:hover{color:var(--ink);background:var(--soft);text-decoration:none}
+.tabs a.on{color:var(--blue);border-bottom-color:var(--blue)}
+.btn{background:var(--blue);color:#fff;font:500 14px/1 Roboto,Arial,sans-serif;padding:10px 24px;border-radius:999px;white-space:nowrap;transition:background .15s,box-shadow .15s}
+.btn:hover{background:var(--blue-d);box-shadow:0 1px 3px rgba(60,64,67,.3);text-decoration:none}
+
+.hero{background:var(--soft);border-bottom:1px solid var(--line)}
+.hero-in{max-width:1120px;margin:0 auto;padding:56px 24px 40px}
+.eyebrow{margin:0 0 8px;color:var(--blue);font:500 14px/1.4 Roboto,Arial,sans-serif;letter-spacing:.4px}
+.hero h1{margin:0;color:var(--ink);font:400 44px/1.2 "Google Sans",Roboto,Arial,sans-serif;letter-spacing:-.3px}
+.meta{margin:12px 0 0;font-size:14px;color:var(--sub)}
+
+.wrap{max-width:1120px;margin:0 auto;padding:40px 24px 72px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:64px;align-items:start}
+.toc{position:sticky;top:calc(var(--hdr) + 24px);max-height:calc(100vh - var(--hdr) - 48px);overflow:auto}
+.toc summary{list-style:none;cursor:default;color:var(--ink);font:500 14px/1 Roboto,Arial,sans-serif;padding:0 0 12px 16px}
+.toc summary::-webkit-details-marker{display:none}
+.toc nav{display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.toc nav a{padding:8px 16px;margin-left:-1px;border-left:3px solid transparent;color:var(--sub);font-size:14px;line-height:1.4}
+.toc nav a:hover{color:var(--ink);background:var(--soft);text-decoration:none}
+.toc nav a.on{color:var(--blue);border-left-color:var(--blue);font-weight:500;background:var(--tint)}
+
+.doc{max-width:720px;min-width:0}
+.doc h2{margin:48px 0 12px;color:var(--ink);font:400 24px/1.35 "Google Sans",Roboto,Arial,sans-serif}
+.doc p,.doc li{font-size:16px}
+.doc p{margin:0 0 16px}
+.doc ul{margin:0 0 16px;padding-left:24px}
+.doc li{margin:0 0 8px;padding-left:4px}
+.doc li::marker{color:var(--blue)}
+.doc strong{color:var(--ink);font-weight:500}
+.doc code{background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font:13px/1.4 "Roboto Mono",ui-monospace,monospace;color:var(--ink)}
+.short{background:var(--tint);border-radius:16px;padding:24px 28px;margin:0 0 28px}
+.doc h2.short-t{margin:0 0 12px;font-size:18px;font-weight:500;color:#174ea6}
+.short ul{margin:0;padding-left:20px}.short li{color:#174ea6;margin-bottom:6px}.short li:last-child{margin:0}
+
+.foot{background:var(--soft);border-top:1px solid var(--line);color:var(--sub);font-size:14px}
+.foot-in{max-width:1120px;margin:0 auto;padding:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot nav{display:flex;gap:24px;flex-wrap:wrap}.foot a{color:var(--sub)}.foot a:hover{color:var(--blue)}
+
+@media (max-width:900px){
+  .bar-in{padding:0 16px;gap:12px;flex-wrap:wrap;height:auto;min-height:var(--hdr)}
+  .tabs{order:3;flex:1 0 100%;margin:0 -8px;overflow-x:auto;height:48px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+  :root{--hdr:112px}
+  .hero-in{padding:32px 16px 24px}.hero h1{font-size:32px}
+  .wrap{grid-template-columns:1fr;gap:16px;padding:24px 16px 56px}
+  .toc{position:static;max-height:none;border:1px solid var(--line);border-radius:12px;padding:12px 8px}
+  .toc summary{cursor:pointer;padding:4px 12px 4px}
+  .toc nav{border:0;padding-top:8px}.toc nav a{border-left:0;border-radius:8px}
+  .doc h2{font-size:22px;margin-top:36px}
+  .btn{margin-left:auto}
+}
+@media print{.bar,.toc,.foot{display:none}.hero{background:#fff}.wrap{display:block}}
+@media (max-width:900px){.toc summary{display:flex;justify-content:space-between;align-items:center}.toc summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--sub);border-bottom:2px solid var(--sub);transform:rotate(45deg);margin:-4px 8px 0 0;transition:transform .2s}.toc details[open] summary::after{transform:rotate(-135deg);margin-top:4px}}
