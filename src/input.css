@@ -580,3 +580,14 @@ body > aside { flex: none; }
 /* Keep dropdown card headers on one line, even in the narrow mobile drawer */
 .fold-head h3, .fold-head button, #lib-count-text { white-space: nowrap; }
 .fold-head { flex-wrap: nowrap; }
+
+/* Plan chip (free trial / subscription) */
+.plan-chip { display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin:.5rem .75rem; padding:.5rem .75rem; border:1px solid #e2e8f0; border-radius:.75rem; background:#fff; }
+.plan-chip[data-state="trial"] { background:#eef2ff; border-color:#c7d2fe; }
+.plan-chip[data-state="out"] { background:#fff1f2; border-color:#fecdd3; }
+.plan-chip[data-state="paid"] { background:#ecfdf5; border-color:#a7f3d0; }
+.plan-chip-label { font-size:.75rem; font-weight:700; color:#0f172a; line-height:1.2; }
+.plan-chip-sub { font-size:.6875rem; color:#64748b; line-height:1.2; margin-top:.125rem; }
+.plan-chip-btn { flex:none; padding:.375rem .75rem; font-size:.6875rem; font-weight:600; color:#fff; background:#4f46e5; border-radius:.5rem; cursor:pointer; }
+.plan-chip-btn:hover { background:#4338ca; }
+.plan-chip.hidden { display:none; }

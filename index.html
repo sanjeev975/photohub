@@ -93,6 +93,14 @@
         </div>
       </div>
 
+        <div id="plan-chip" class="plan-chip hidden" data-state="trial" aria-live="polite">
+          <div class="min-w-0">
+            <p id="plan-chip-label" class="plan-chip-label"></p>
+            <p id="plan-chip-sub" class="plan-chip-sub"></p>
+          </div>
+          <button type="button" id="btn-plan-upgrade" class="plan-chip-btn">Upgrade</button>
+        </div>
+
         <nav class="acc" aria-label="Features">
         <div class="acc-item">
           <button type="button" class="tab-btn acc-head bg-indigo-600 text-white shadow-sm" data-tab="tab-photos" aria-controls="tab-photos" aria-expanded="true">
@@ -879,6 +887,17 @@
     </div>
   </dialog>
 
+  <!-- MODAL: Free trial / subscription (content built by access.js; inert unless the server feature is on) -->
+  <dialog id="modal-upgrade" class="rounded-2xl p-0 max-w-md w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
+    <div class="p-5 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <h3 id="upgrade-title" class="text-base font-bold text-slate-900">Upgrade</h3>
+        <button type="button" id="btn-upgrade-close" class="p-1 text-slate-400 hover:text-slate-700 cursor-pointer" aria-label="Close">&times;</button>
+      </div>
+      <div id="upgrade-body"></div>
+    </div>
+  </dialog>
+
   <!-- MODAL: Rename Person Dialog (Replaces window.prompt for sandboxed iframes) -->
   <dialog id="modal-rename" class="rounded-2xl p-0 max-w-sm w-full backdrop:bg-slate-900/50 shadow-2xl border border-slate-200">
     <form method="dialog" id="form-rename" class="p-6 flex flex-col gap-4">
@@ -977,5 +996,6 @@
   <!-- Application Script (ES6+ Vanilla JavaScript) -->
   <script src="app.js"></script>
   <script src="ui.js"></script>
+  <script src="access.js"></script>
 </body>
 </html>
