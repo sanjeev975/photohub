@@ -22,18 +22,13 @@
     // ========================================================
     // SECURITY LAYER
     // - All limits are enforced here in code (never trust DOM attributes or stored data)
-    // - No API keys of any kind exist in this file. Background removal goes through
-    //   this site's own /api/remove-bg function, where the key stays on the server.
+    // - This app is fully static: no API keys, no server calls, photos never leave the browser.
     // ========================================================
     const MAX_COPIES = 200;                    // per photo
     const MAX_TOTAL_ITEMS = 400;               // hard cap on photos placed on all sheets
     const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // per uploaded file
     const MAX_IMAGE_PIXELS = 80 * 1000 * 1000; // decoded pixel cap (decompression-bomb guard)
-    const MAX_API_UPLOAD_BYTES = 3.8 * 1024 * 1024; // must stay below the server limit (4 MB)
-    const API_MAX_SIDE = 2000;                 // longest side sent to the background-removal API
-    const BG_REMOVE_ENDPOINT = '/api/remove-bg';
     const HEIC2ANY_URL = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-    const TURNSTILE_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
     function clampNum(value, min, max, fallback) {
       const n = typeof value === 'string' ? parseFloat(value) : value;
@@ -118,121 +113,7 @@
       return heic2anyPromise;
     }
 
-    // Optional Cloudflare Turnstile (bot protection). Active only if a site key is set in the <meta> tag.
-    let turnstileScriptPromise = null;
-    function loadTurnstileScript() {
-      if (window.turnstile) return Promise.resolve(window.turnstile);
-      if (!turnstileScriptPromise) {
-        turnstileScriptPromise = new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = TURNSTILE_URL;
-          s.async = true;
-          s.onload = () => resolve(window.turnstile);
-          s.onerror = () => { turnstileScriptPromise = null; reject(new Error('Could not load human verification')); };
-          document.head.appendChild(s);
-        });
-      }
-      return turnstileScriptPromise;
-    }
-
-    async function getTurnstileToken() {
-      const meta = document.querySelector('meta[name="turnstile-sitekey"]');
-      const sitekey = meta ? (meta.getAttribute('content') || '').trim() : '';
-      if (!sitekey) return '';
-      const ts = await loadTurnstileScript();
-      const box = document.getElementById('turnstile-box');
-      if (!ts || !box) throw new Error('Human verification unavailable');
-      return new Promise((resolve, reject) => {
-        let widgetId = null;
-        const finish = (fn, val) => {
-          clearTimeout(timer);
-          try { if (widgetId !== null) ts.remove(widgetId); } catch (_) {}
-          box.classList.add('hidden');
-          fn(val);
-        };
-        const timer = setTimeout(() => finish(reject, new Error('Human verification timed out')), 60000);
-        box.classList.remove('hidden');
-        widgetId = ts.render(box, {
-          sitekey,
-          appearance: 'interaction-only',
-          callback: (token) => finish(resolve, token),
-          'error-callback': () => finish(reject, new Error('Human verification failed')),
-        });
-      });
-    }
-
-    function canvasToBlob(canvas, type, quality) {
-      return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
-    }
-
-    // Sends a downscaled JPEG to OUR OWN endpoint. The remove.bg key never exists in the browser.
-    async function requestServerBackgroundRemoval(sourceImg) {
-      if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-        throw new Error('offline-standalone');
-      }
-      const natW = sourceImg.naturalWidth || sourceImg.width;
-      const natH = sourceImg.naturalHeight || sourceImg.height;
-      const scale = Math.min(1, API_MAX_SIDE / Math.max(natW, natH));
-      const w = Math.max(1, Math.round(natW * scale));
-      const h = Math.max(1, Math.round(natH * scale));
-
-      const c = document.createElement('canvas');
-      c.width = w;
-      c.height = h;
-      const cctx = c.getContext('2d');
-      cctx.fillStyle = '#ffffff';
-      cctx.fillRect(0, 0, w, h);
-      cctx.drawImage(sourceImg, 0, 0, w, h);
-
-      let quality = 0.9;
-      let blob = await canvasToBlob(c, 'image/jpeg', quality);
-      while (blob && blob.size > MAX_API_UPLOAD_BYTES && quality > 0.5) {
-        quality -= 0.1;
-        blob = await canvasToBlob(c, 'image/jpeg', quality);
-      }
-      if (!blob || blob.size > MAX_API_UPLOAD_BYTES) {
-        throw new Error('Photo is too large to process online. Please use a smaller photo.');
-      }
-
-      const headers = { 'Content-Type': 'application/octet-stream' };
-      const token = await getTurnstileToken();
-      if (token) headers['X-Turnstile-Token'] = token;
-
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 45000);
-      let resp;
-      try {
-        resp = await fetch(BG_REMOVE_ENDPOINT, {
-          method: 'POST',
-          headers,
-          body: blob,
-          signal: ctrl.signal,
-          credentials: 'omit',
-          cache: 'no-store'
-        });
-      } finally {
-        clearTimeout(timer);
-      }
-
-      if (!resp.ok) {
-        let msg = '';
-        try {
-          const j = await resp.json();
-          if (j && typeof j.error === 'string') msg = j.error.slice(0, 160);
-        } catch (_) {}
-        const err = new Error(msg || `Service error (${resp.status})`);
-        err.status = resp.status;
-        throw err;
-      }
-
-      const ct = (resp.headers.get('content-type') || '').toLowerCase();
-      if (!/^image\/(jpeg|png)/.test(ct)) throw new Error('Unexpected response from the server');
-      const out = await resp.blob();
-      if (out.size < 500 || out.size > 8 * 1024 * 1024) throw new Error('Unexpected response size from the server');
-      return out;
-    }
-
-        // Canonical LocalStorage Key for User-Preserved Defaults
+    // Canonical LocalStorage Key for User-Preserved Defaults
     const STORAGE_KEY_DEFAULTS = 'passport_hub_user_default_settings_v1';
 
     // Factory Defaults (4 copies, Indian 35x45 standard, 0.3mm border, A4 portrait)
@@ -793,10 +674,7 @@
         });
       });
 
-      // Background Removal Buttons & Cropper Controls
-      document.getElementById('btn-remove-bg')?.addEventListener('click', runBackgroundRemoval);
-      document.getElementById('btn-remove-bg-card')?.addEventListener('click', runBackgroundRemoval);
-      document.getElementById('btn-revert-bg')?.addEventListener('click', revertBackgroundToOriginal);
+      // Cropper Controls
 
       document.getElementById('btn-crop-zoom-in')?.addEventListener('click', () => cropperInstance?.zoom(0.1));
       document.getElementById('btn-crop-zoom-out')?.addEventListener('click', () => cropperInstance?.zoom(-0.1));
@@ -1566,12 +1444,6 @@
         syncCopiesUI();
       }
 
-      // Revert Background Button visibility
-      const btnRevertBg = document.getElementById('btn-revert-bg');
-      if (btnRevertBg) {
-        btnRevertBg.classList.toggle('hidden', !person.originalPhotoUrl);
-      }
-
       // Sync Photo Name / Date Text
       const inputPhotoText = document.getElementById('input-photo-text');
       if (inputPhotoText) inputPhotoText.value = person.captionText || '';
@@ -1746,327 +1618,7 @@
       scheduleSheetRender();
     }
 
-    // ========================================================
-    // BACKGROUND REMOVAL & PURE WHITE PASSPORT COMPLIANCE
-    // ========================================================
-    let isRemovingBg = false;
-    let selfieSegmentationInstance = null;
-
-    // Initialize or retrieve the MediaPipe SelfieSegmentation neural model
-    function getSelfieSegmentationModel() {
-      if (selfieSegmentationInstance) return selfieSegmentationInstance;
-      if (typeof window.SelfieSegmentation === 'function') {
-        try {
-          selfieSegmentationInstance = new window.SelfieSegmentation({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/${file}`,
-          });
-          selfieSegmentationInstance.setOptions({
-            modelSelection: 1, // 1 = landscape / higher accuracy model
-          });
-          return selfieSegmentationInstance;
-        } catch (e) {
-          console.warn('Failed to initialize MediaPipe SelfieSegmentation:', e);
-        }
-      }
-      return null;
-    }
-
-    // Main Background Removal Action (3-Tier Engine: Remove.bg API -> MediaPipe Neural -> Canvas Matting)
-    async function runBackgroundRemoval() {
-      const person = getActivePerson();
-      if (!person || !cropperInstance || isRemovingBg) {
-        showToast('Please select or upload a photo first', 'info');
-        return;
-      }
-
-      isRemovingBg = true;
-      const statusBadge = document.getElementById('bg-remove-status');
-      const statusText = document.getElementById('bg-remove-status-text');
-      const btnRemove = document.getElementById('btn-remove-bg');
-      const btnRemoveLabel = document.getElementById('btn-remove-bg-label');
-      const btnCard = document.getElementById('btn-remove-bg-card');
-
-      if (statusBadge) {
-        statusBadge.classList.remove('hidden');
-        if (statusText) statusText.textContent = 'Connecting to Remove.bg Studio AI...';
-      }
-      if (btnRemoveLabel) btnRemoveLabel.textContent = 'Cleaning...';
-      if (btnRemove) btnRemove.classList.add('opacity-75', 'pointer-events-none');
-      if (btnCard) btnCard.classList.add('opacity-75', 'pointer-events-none');
-
-      try {
-        // Save original photo URL if not already preserved for undo/revert
-        if (!person.originalPhotoUrl) {
-          person.originalPhotoUrl = person.objectUrl;
-        }
-
-        const sourceImg = cropperInstance.element;
-        const width = person.originalWidth || sourceImg.naturalWidth;
-        const height = person.originalHeight || sourceImg.naturalHeight;
-
-        let processedDataUrl = null;
-        let usedProviderName = '';
-
-        // ========================================================
-        // TIER 1: Secure server-side AI via this site's /api/remove-bg
-        // (the remove.bg API key lives only in Vercel environment variables)
-        // ========================================================
-        try {
-          if (statusText) statusText.textContent = 'Removing background with secure studio AI...';
-          const resultBlob = await requestServerBackgroundRemoval(sourceImg);
-
-          if (statusText) statusText.textContent = 'Compositing onto pure white passport canvas...';
-          const resultUrl = URL.createObjectURL(resultBlob);
-          try {
-            const transImg = new Image();
-            await new Promise((resolve, reject) => {
-              transImg.onload = resolve;
-              transImg.onerror = reject;
-              transImg.src = resultUrl;
-            });
-
-            const outCanvas = document.createElement('canvas');
-            outCanvas.width = width;
-            outCanvas.height = height;
-            const ctx = outCanvas.getContext('2d');
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(0, 0, width, height);
-            ctx.drawImage(transImg, 0, 0, width, height);
-            processedDataUrl = outCanvas.toDataURL('image/jpeg', 0.98);
-            usedProviderName = 'Secure Studio AI';
-          } finally {
-            URL.revokeObjectURL(resultUrl);
-          }
-        } catch (apiErr) {
-          if (apiErr && apiErr.message !== 'offline-standalone') {
-            console.warn('Server background removal unavailable:', apiErr.message);
-            showToast(`${apiErr.message} Using on-device AI instead.`, 'info');
-          }
-        }
-
-        // ========================================================
-        // TIER 2: Open-Source MediaPipe Neural Segmentation
-        // ========================================================
-        if (!processedDataUrl) {
-          if (statusText) statusText.textContent = 'Running on-device neural segmentation...';
-          const model = getSelfieSegmentationModel();
-          if (model) {
-            try {
-              const results = await new Promise((resolve, reject) => {
-                let settled = false;
-                const timeout = setTimeout(() => {
-                  if (!settled) {
-                    settled = true;
-                    reject(new Error('MediaPipe segmentation timeout'));
-                  }
-                }, 9000);
-
-                model.onResults((res) => {
-                  if (settled) return;
-                  settled = true;
-                  clearTimeout(timeout);
-                  resolve(res);
-                });
-
-                model.send({ image: sourceImg }).catch((err) => {
-                  if (!settled) {
-                    settled = true;
-                    clearTimeout(timeout);
-                    reject(err);
-                  }
-                });
-              });
-
-              if (results && results.segmentationMask) {
-                // Composite onto pure solid white (#FFFFFF)
-                const outCanvas = document.createElement('canvas');
-                outCanvas.width = width;
-                outCanvas.height = height;
-                const ctx = outCanvas.getContext('2d');
-
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, width, height);
-
-                const maskCanvas = document.createElement('canvas');
-                maskCanvas.width = width;
-                maskCanvas.height = height;
-                const mCtx = maskCanvas.getContext('2d');
-
-                mCtx.drawImage(sourceImg, 0, 0, width, height);
-                mCtx.globalCompositeOperation = 'destination-in';
-                mCtx.drawImage(results.segmentationMask, 0, 0, width, height);
-
-                ctx.drawImage(maskCanvas, 0, 0, width, height);
-                processedDataUrl = outCanvas.toDataURL('image/jpeg', 0.98);
-                usedProviderName = 'MediaPipe Neural AI (On-Device)';
-              }
-            } catch (mpErr) {
-              console.warn('MediaPipe error, falling back to smart canvas matting:', mpErr);
-            }
-          }
-        }
-
-        // ========================================================
-        // TIER 3: Smart Client-Side Color & Edge Matting Fallback
-        // ========================================================
-        if (!processedDataUrl) {
-          if (statusText) statusText.textContent = 'Applying smart edge matting...';
-          processedDataUrl = await removeBackgroundWithCanvasMatting(sourceImg, width, height);
-          usedProviderName = 'Smart Canvas Matting';
-        }
-
-        if (processedDataUrl) {
-          // Update person with cleaned image
-          person.objectUrl = processedDataUrl;
-          person.canvasCache = null;
-
-          // Preserve current crop proportions
-          const currentCropData = cropperInstance.getData();
-
-          // Create new Image object to ensure clean natural dimensions
-          const newImg = new Image();
-          await new Promise((resolve, reject) => {
-            newImg.onload = resolve;
-            newImg.onerror = reject;
-            newImg.src = processedDataUrl;
-          });
-
-          person.imageElement = newImg;
-          cropperInstance.replace(processedDataUrl, false);
-          if (currentCropData) {
-            setTimeout(() => {
-              if (cropperInstance) cropperInstance.setData(currentCropData);
-            }, 60);
-          }
-
-          // Show Revert Button
-          const btnRevert = document.getElementById('btn-revert-bg');
-          if (btnRevert) btnRevert.classList.remove('hidden');
-
-          // Update active thumb
-          const thumb = document.getElementById('active-person-thumb');
-          if (thumb) thumb.innerHTML = `<img src="${safeImgSrc(processedDataUrl)}" class="w-full h-full object-cover" />`;
-
-          scheduleSheetRender();
-          showToast(`✓ Background cleaned with ${usedProviderName}: 100% pure white passport background created!`, 'success');
-        } else {
-          showToast('Could not isolate background cleanly on this image.', 'error');
-        }
-      } catch (err) {
-        console.error('Background removal error:', err);
-        showToast('Background removal error: ' + (err.message || 'Unknown error'), 'error');
-      } finally {
-        isRemovingBg = false;
-        if (statusBadge) statusBadge.classList.add('hidden');
-        if (btnRemoveLabel) btnRemoveLabel.textContent = 'Remove Background';
-        if (btnRemove) btnRemove.classList.remove('opacity-75', 'pointer-events-none');
-        if (btnCard) btnCard.classList.remove('opacity-75', 'pointer-events-none');
-      }
-    }
-
-    // Revert to the original uploaded photo background
-    function revertBackgroundToOriginal() {
-      const person = getActivePerson();
-      if (!person || !person.originalPhotoUrl || !cropperInstance) return;
-
-      const origUrl = person.originalPhotoUrl;
-      person.objectUrl = origUrl;
-      person.canvasCache = null;
-      person.originalPhotoUrl = null; // Cleared
-
-      const currentCropData = cropperInstance.getData();
-      cropperInstance.replace(origUrl, false);
-      if (currentCropData) {
-        setTimeout(() => {
-          if (cropperInstance) cropperInstance.setData(currentCropData);
-        }, 60);
-      }
-
-      const btnRevert = document.getElementById('btn-revert-bg');
-      if (btnRevert) btnRevert.classList.add('hidden');
-
-      const thumb = document.getElementById('active-person-thumb');
-      if (thumb) thumb.innerHTML = `<img src="${safeImgSrc(origUrl)}" class="w-full h-full object-cover" />`;
-
-      scheduleSheetRender();
-      showToast('Reverted to original photo background', 'info');
-    }
-
-    // Smart canvas-based background isolation & edge feathering fallback
-    async function removeBackgroundWithCanvasMatting(imgElement, width, height) {
-      return new Promise((resolve) => {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(imgElement, 0, 0, width, height);
-
-          const imgData = ctx.getImageData(0, 0, width, height);
-          const data = imgData.data;
-
-          // Sample corner and perimeter pixels to detect dominant backdrop color
-          const samplePoints = [
-            [0, 0], [width - 1, 0],
-            [Math.floor(width * 0.1), Math.floor(height * 0.05)],
-            [Math.floor(width * 0.9), Math.floor(height * 0.05)],
-            [0, Math.floor(height * 0.3)], [width - 1, Math.floor(height * 0.3)]
-          ];
-
-          let avgR = 0, avgG = 0, avgB = 0, samplesCount = 0;
-          for (const [sx, sy] of samplePoints) {
-            const idx = (sy * width + sx) * 4;
-            avgR += data[idx];
-            avgG += data[idx + 1];
-            avgB += data[idx + 2];
-            samplesCount++;
-          }
-          avgR /= samplesCount;
-          avgG /= samplesCount;
-          avgB /= samplesCount;
-
-          // Adaptive background difference threshold
-          const threshold = 40;
-
-          for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-              const idx = (y * width + x) * 4;
-              const r = data[idx];
-              const g = data[idx + 1];
-              const b = data[idx + 2];
-
-              // Protect center subject region from over-thresholding
-              const isCenterPerson = (x > width * 0.22 && x < width * 0.78 && y > height * 0.25);
-              const colorDist = Math.sqrt(
-                Math.pow(r - avgR, 2) + Math.pow(g - avgG, 2) + Math.pow(b - avgB, 2)
-              );
-
-              // Replace detected backdrop pixels with solid pure white
-              if (!isCenterPerson && colorDist < threshold) {
-                data[idx] = 255;
-                data[idx + 1] = 255;
-                data[idx + 2] = 255;
-                data[idx + 3] = 255;
-              } else if (!isCenterPerson && colorDist < threshold + 18) {
-                // Soft edge anti-aliasing
-                const factor = (colorDist - threshold) / 18;
-                data[idx] = Math.round(r * factor + 255 * (1 - factor));
-                data[idx + 1] = Math.round(g * factor + 255 * (1 - factor));
-                data[idx + 2] = Math.round(b * factor + 255 * (1 - factor));
-              }
-            }
-          }
-
-          ctx.putImageData(imgData, 0, 0);
-          resolve(canvas.toDataURL('image/jpeg', 0.98));
-        } catch (e) {
-          console.error('Canvas matting error:', e);
-          resolve(null);
-        }
-      });
-    }
-
-    // Render People List in Tab 1
+    // Render People List (Photos section)
     function renderPeopleList() {
       const listEl = document.getElementById('people-list');
       const emptyEl = document.getElementById('library-empty-state');
@@ -2267,7 +1819,7 @@
         document.getElementById('cropper-image').classList.add('opacity-0');
         document.getElementById('cropper-placeholder')?.classList.remove('hidden');
         document.getElementById('active-person-name').textContent = 'No Photo Selected';
-        document.getElementById('active-person-meta').textContent = 'Select a photo from Tab 1';
+        document.getElementById('active-person-meta').textContent = 'Open the Photos section to add one';
         document.getElementById('active-person-thumb').innerHTML = '<i data-lucide="user" class="w-5 h-5 text-slate-400"></i>';
         initLucide();
         scheduleSheetRender();
@@ -2287,7 +1839,7 @@
       document.getElementById('cropper-image').classList.add('opacity-0');
       document.getElementById('cropper-placeholder')?.classList.remove('hidden');
       document.getElementById('active-person-name').textContent = 'No Photo Selected';
-      document.getElementById('active-person-meta').textContent = 'Select a photo from Tab 1';
+      document.getElementById('active-person-meta').textContent = 'Open the Photos section to add one';
       document.getElementById('active-person-thumb').innerHTML = '<i data-lucide="user" class="w-5 h-5 text-slate-400"></i>';
       const inputPhotoText = document.getElementById('input-photo-text');
       if (inputPhotoText) inputPhotoText.value = '';

@@ -2,16 +2,13 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "functions": {
-    "api/*.js": { "maxDuration": 30 }
-  },
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/ https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/ https://unpkg.com/lucide@0.263.1/ https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/ https://cdn.jsdelivr.net/npm/heic2any@0.0.4/ https://challenges.cloudflare.com/turnstile/ 'wasm-unsafe-eval'; style-src 'self' https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/ https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' blob: data: https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/; frame-src https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'none'; media-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'; script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/ https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/ https://unpkg.com/lucide@0.263.1/ https://cdn.jsdelivr.net/npm/heic2any@0.0.4/ 'wasm-unsafe-eval'; style-src 'self' https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/ https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' blob: data:; worker-src 'self' blob:; manifest-src 'none'; media-src 'none'; upgrade-insecure-requests"
         },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
@@ -21,12 +18,6 @@
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
         { "key": "X-Permitted-Cross-Domain-Policies", "value": "none" }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
       ]
     }
   ]
