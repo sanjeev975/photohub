@@ -1,6 +1,6 @@
 /** Tailwind build config (only needed if you edit the HTML/JS classes later). */
 module.exports = {
-  content: ['./index.html', './app.js', './ui.js'],
+  content: ['./index.html', './app.js', './ui.js', './access.js', './admin.html', './admin.js', './privacy.html', './terms.html', './refund.html', './contact.html'],
   theme: {
     extend: {
       fontFamily: {
