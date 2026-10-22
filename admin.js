@@ -19,6 +19,7 @@
     c.appendChild(h('p', 'text-sm font-semibold', '₹' + p.price + ' · ' + p.plan + ' · ' + p.status));
     c.appendChild(h('p', 'text-xs font-mono break-all mt-1', 'UTR: ' + p.utr));
     c.appendChild(h('p', 'text-xs text-slate-600', 'Contact: ' + p.contact + ' · ' + fmt(p.createdAt)));
+    if (p.status === 'approved' && p.startsAt) c.appendChild(h('p', 'text-xs text-emerald-700', 'Runs ' + fmt(p.startsAt) + ' → ' + fmt(p.expiresAt)));
     if (actions) c.appendChild(actions);
     return c;
   }
@@ -44,9 +45,9 @@
     var rec = $('recent'); rec.textContent = '';
     (d.recent || []).forEach(function (p) {
       var row = null;
-      if (p.status === 'approved' && p.licId) {
+      if (p.status === 'approved') {
         row = h('div', 'mt-2');
-        row.appendChild(btn('Revoke', 'bg-white border border-rose-300 text-rose-700', function () { return act({ action: 'revoke', licId: p.licId }, 'End this subscription now?'); }));
+        row.appendChild(btn('Refund / Revoke this payment', 'bg-white border border-rose-300 text-rose-700', function () { return act({ action: 'revoke', utr: p.utr }, 'Cancel ONLY this payment (₹' + p.price + ', ' + p.plan + ')? The user keeps any other plans they bought; only the unused time of this one is removed.'); }));
       }
       rec.appendChild(card(p, row));
     });
