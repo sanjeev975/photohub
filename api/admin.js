@@ -5,7 +5,7 @@
  *   { action: "list" }                    pending + recent payment requests
  *   { action: "approve", utr }            activate the plan (extends if already subscribed)
  *   { action: "reject",  utr, reason }    decline a request
- *   { action: "revoke",  licId }          end a subscription now
+ *   { action: "revoke",  utr }            cancel ONE payment (only its unused time is removed)
  *
  * Invisible (404) unless PAYMENTS_ENABLED=1 and ADMIN_TOKEN (24+ chars) are set.
  * Wrong tokens are rate-limited per IP.
@@ -56,6 +56,14 @@ module.exports = async function handler(req, res) {
       return A.send(res, 200, { ok: true, ...(await A.listPayments(store)) });
     }
     if (body.action === 'revoke') {
+      if (typeof body.utr === 'string') {
+        const utr = A.normalizeUtr(body.utr);
+        if (!utr) return A.send(res, 422, { error: 'Invalid reference' });
+        const out = await A.revokePayment(store, utr);
+        if (out.error) return A.send(res, out.status || 400, { error: out.error });
+        return A.send(res, 200, { ok: true, ...(await A.listPayments(store)) });
+      }
+      // revoke everything for a license (kept for completeness)
       if (typeof body.licId !== 'string' || !/^[A-Za-z0-9_-]{8,40}$/.test(body.licId)) return A.send(res, 422, { error: 'Invalid license' });
       const out = await A.revokeLicense(store, body.licId);
       if (out.error) return A.send(res, out.status || 400, { error: out.error });

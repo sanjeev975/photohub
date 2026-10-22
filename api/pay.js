@@ -81,7 +81,7 @@ module.exports = async function handler(req, res) {
         return A.send(res, 409, { error: `This subscription is already active on ${MAX_DEVICES_PER_LICENSE} browsers. Contact support to reset.` });
       }
       devices.push(deviceId);
-      await store.pipeline([['SET', A.k('lic', lic.id), JSON.stringify({ exp: lic.exp, plan: lic.plan, devices, created: lic.created })]]);
+      await store.pipeline([['SET', A.k('lic', lic.id), JSON.stringify({ exp: lic.exp, plan: lic.plan, packs: lic.packs, devices, created: lic.created })]]);
     }
     await store.pipeline([['SET', A.k('dev', deviceId, 'lic'), lic.id]]);
     return A.send(res, 200, { ok: true, ...(await A.buildStatus(ctx)) });
