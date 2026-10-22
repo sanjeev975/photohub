@@ -7,7 +7,7 @@
  *
  * Nothing here ever grants access. Only the owner can approve a request (api/admin.js)
  * after checking the money arrived in their own bank account.
- * Disabled (404) until PAYMENTS_ENABLED=1 and UPI_ID are set.
+ * Disabled (404) until PAYMENTS_ENABLED=1 and a UPI QR (UPI_QR_PATH) or UPI_ID are set.
  */
 
 const A = require('../lib/access');
@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
   try {
     const ctx = await A.prelude(req, res, { method: 'POST', issueCookie: false });
     if (ctx.done) return;
-    if (ctx.off || !ctx.cfg.paymentsEnabled || !ctx.cfg.upiId) return A.send(res, 404, { error: 'Not available' });
+    if (ctx.off || !ctx.cfg.paymentsEnabled || !(ctx.cfg.upiId || ctx.cfg.upiQrPath)) return A.send(res, 404, { error: 'Not available' });
 
     let body;
     try { body = await A.readJson(req, 2048); } catch (e) {

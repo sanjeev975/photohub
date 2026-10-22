@@ -229,21 +229,24 @@
       img.alt = 'UPI QR code'; img.src = qr;
       pay.appendChild(img);
     }
-    var row = h('div', 'mt-2 flex items-center justify-between gap-2 rounded-lg bg-slate-50 px-3 py-2');
-    var idSpan = h('span', 'text-sm font-mono text-slate-800 break-all', s.upi.id);
-    row.appendChild(idSpan);
-    var cp = h('button', 'text-xs font-semibold text-indigo-700 hover:text-indigo-900 cursor-pointer', 'Copy');
-    cp.type = 'button';
-    cp.addEventListener('click', function () {
-      try { navigator.clipboard.writeText(s.upi.id).then(function () { cp.textContent = 'Copied'; }); } catch (e) { toast('Copy not supported here', 'error'); }
-    });
-    row.appendChild(cp);
-    pay.appendChild(row);
-    if (s.upi.name) pay.appendChild(h('p', 'text-[11px] text-slate-500 mt-1', 'Pay to: ' + s.upi.name));
-    var link = h('a', 'lg:hidden mt-2 inline-block text-xs font-semibold text-indigo-700 underline', 'Open in UPI app');
-    link.href = 'upi://pay?pa=' + encodeURIComponent(s.upi.id) + '&pn=' + encodeURIComponent(s.upi.name || '') + '&am=' + plan.price + '&cu=INR';
-    link.rel = 'noopener noreferrer';
-    pay.appendChild(link);
+    if (s.upi && s.upi.id) {
+      var row = h('div', 'mt-2 flex items-center justify-between gap-2 rounded-lg bg-slate-50 px-3 py-2');
+      row.appendChild(h('span', 'text-sm font-mono text-slate-800 break-all', s.upi.id));
+      var cp = h('button', 'text-xs font-semibold text-indigo-700 hover:text-indigo-900 cursor-pointer', 'Copy');
+      cp.type = 'button';
+      cp.addEventListener('click', function () {
+        try { navigator.clipboard.writeText(s.upi.id).then(function () { cp.textContent = 'Copied'; }); } catch (e) { toast('Copy not supported here', 'error'); }
+      });
+      row.appendChild(cp);
+      pay.appendChild(row);
+      if (s.upi.name) pay.appendChild(h('p', 'text-[11px] text-slate-500 mt-1', 'Pay to: ' + s.upi.name));
+      var link = h('a', 'lg:hidden mt-2 inline-block text-xs font-semibold text-indigo-700 underline', 'Open in UPI app');
+      link.href = 'upi://pay?pa=' + encodeURIComponent(s.upi.id) + '&pn=' + encodeURIComponent(s.upi.name || '') + '&am=' + plan.price + '&cu=INR';
+      link.rel = 'noopener noreferrer';
+      pay.appendChild(link);
+    } else if (qr) {
+      pay.appendChild(h('p', 'text-[11px] text-slate-500 mt-2 text-center', 'Scan with any UPI app (GPay, PhonePe, Paytm...) and pay exactly ₹' + plan.price + '.'));
+    }
     root.appendChild(pay);
 
     var f = h('form', 'mt-3 space-y-2');
