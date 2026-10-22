@@ -2333,7 +2333,7 @@
       if (AppState.zoomLevel === 'fit') {
         AppState.zoomLevel = AppState.zoomScale;
       }
-      AppState.zoomLevel = Math.min(3.0, Math.max(0.3, AppState.zoomLevel + delta));
+      AppState.zoomLevel = Math.min(8.0, Math.max(0.1, AppState.zoomLevel + delta * Math.max(1, AppState.zoomLevel)));
       AppState.zoomScale = AppState.zoomLevel;
       applyCanvasTransform();
     }

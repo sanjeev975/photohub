@@ -160,3 +160,27 @@
     });
   });
 })();
+
+/* Zoom + / - : press and hold to keep zooming */
+(function () {
+  'use strict';
+  function hold(id, delta) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    var t = null, iv = null, held = false;
+    function stop() { clearTimeout(t); clearInterval(iv); t = iv = null; }
+    b.addEventListener('pointerdown', function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      held = false;
+      t = setTimeout(function () {
+        held = true;
+        iv = setInterval(function () { if (typeof changeZoom === 'function') changeZoom(delta); }, 60);
+      }, 350);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel', 'blur'].forEach(function (ev) { b.addEventListener(ev, stop); });
+    // a long press must not also fire the normal click step
+    b.addEventListener('click', function (e) { if (held) { e.stopImmediatePropagation(); held = false; } }, true);
+  }
+  hold('btn-zoom-in', 0.08);
+  hold('btn-zoom-out', -0.08);
+})();

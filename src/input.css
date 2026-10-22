@@ -596,3 +596,8 @@ body > aside { flex: none; }
 .side-legal { display:flex; flex-wrap:wrap; gap:.25rem .875rem; padding:.75rem 1rem 1rem; font-size:.6875rem; }
 .side-legal a { color:#64748b; text-decoration:underline; }
 .side-legal a:hover { color:#4338ca; }
+
+/* Zoom +/- buttons (text glyphs so they always show) */
+.zoom-step { width:1.75rem; height:1.75rem; display:inline-flex; align-items:center; justify-content:center; border-radius:.375rem; font-size:1.25rem; line-height:1; font-weight:600; color:#334155; cursor:pointer; user-select:none; touch-action:manipulation; }
+.zoom-step:hover { background:#fff; color:#0f172a; }
+.zoom-step:active { transform:scale(.92); }

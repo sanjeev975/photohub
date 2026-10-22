@@ -654,13 +654,9 @@
 
           <!-- Zoom Buttons -->
           <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-            <button type="button" id="btn-zoom-out" class="p-1.5 rounded text-slate-600 hover:text-slate-900" title="Zoom Out">
-              <i data-lucide="minus" class="w-3.5 h-3.5"></i>
-            </button>
+            <button type="button" id="btn-zoom-out" class="zoom-step" title="Zoom Out (hold to keep zooming)" aria-label="Zoom out">&minus;</button>
             <span id="zoom-level-text" class="text-[11px] font-mono px-1.5 text-slate-700 font-medium tabular-nums">Fit</span>
-            <button type="button" id="btn-zoom-in" class="p-1.5 rounded text-slate-600 hover:text-slate-900" title="Zoom In">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            </button>
+            <button type="button" id="btn-zoom-in" class="zoom-step" title="Zoom In (hold to keep zooming)" aria-label="Zoom in">+</button>
             <button type="button" id="btn-zoom-fit" class="p-1.5 rounded text-slate-600 hover:text-slate-900 text-xs font-semibold px-2" title="Fit to Screen">
               Fit
             </button>
