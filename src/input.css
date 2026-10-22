@@ -591,3 +591,8 @@ body > aside { flex: none; }
 .plan-chip-btn { flex:none; padding:.375rem .75rem; font-size:.6875rem; font-weight:600; color:#fff; background:#4f46e5; border-radius:.5rem; cursor:pointer; }
 .plan-chip-btn:hover { background:#4338ca; }
 .plan-chip.hidden { display:none; }
+
+/* Legal links at the bottom of the side panel */
+.side-legal { display:flex; flex-wrap:wrap; gap:.25rem .875rem; padding:.75rem 1rem 1rem; font-size:.6875rem; }
+.side-legal a { color:#64748b; text-decoration:underline; }
+.side-legal a:hover { color:#4338ca; }
