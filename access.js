@@ -52,9 +52,10 @@
     var sub = el('plan-chip-sub');
     var btn = el('btn-plan-upgrade');
     if (s.paid) {
-      label.textContent = (s.plan || 'Subscribed') + ' active';
-      sub.textContent = s.daysLeft + (s.daysLeft === 1 ? ' day left' : ' days left');
-      btn.textContent = s.payments ? 'Renew' : 'Details';
+      var np = (s.packs || []).length;
+      label.textContent = np > 1 ? np + ' plans · active' : (s.plan || 'Subscribed') + ' active';
+      sub.textContent = s.pending ? 'New payment under review' : (s.daysLeft + (s.daysLeft === 1 ? ' day' : ' days') + ' left in total');
+      btn.textContent = 'Details';
     } else if (s.pending) {
       label.textContent = 'Payment under review';
       sub.textContent = 'We will unlock your plan once confirmed';
@@ -156,7 +157,8 @@
     if (!m.open) { try { m.showModal(); } catch (e) { m.setAttribute('open', ''); } }
   }
 
-  var ui = { plan: 'm3', mode: 'pay', msg: '', err: '' };
+  var ui = { plan: 'm3', mode: 'pay', msg: '', err: '', adding: false, utr: '', contact: '' };
+  function fmtDate(v) { try { return new Date(v).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return ''; } }
 
   function render(code) {
     var root = el('upgrade-body');
@@ -166,10 +168,43 @@
     var title = el('upgrade-title');
 
     if (s.paid) {
-      title.textContent = (s.plan || 'Subscription') + ' active';
-      root.appendChild(h('p', 'text-sm text-slate-600', 'Valid until ' + new Date(s.paidUntil).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) + ' (' + s.daysLeft + ' days left). You can export without limits.'));
-      if (s.payments) root.appendChild(h('p', 'text-xs text-slate-500 mt-3', 'Paying again for another plan adds time on top of what you have left.'));
-      if (s.payments) buildPay(root, s);
+      if (ui.adding && s.payments && !s.pending) {
+        title.textContent = 'Add another pack';
+        root.appendChild(h('p', 'text-sm text-slate-600', 'The new pack starts automatically when your current packs end. Nothing you already have is lost.'));
+        buildPay(root, s);
+        var back = h('button', 'mt-3 text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer', 'Back to my plans');
+        back.type = 'button';
+        back.addEventListener('click', function () { ui.adding = false; ui.mode = 'pay'; render(); });
+        root.appendChild(back);
+        return;
+      }
+      ui.adding = false;
+      title.textContent = 'Your plans';
+      root.appendChild(h('p', 'text-sm text-slate-600', 'Valid until ' + fmtDate(s.paidUntil) + ' (' + s.daysLeft + ' days left in total). You can export without limits.'));
+      var list = h('div', 'mt-4 space-y-2');
+      (s.packs || []).forEach(function (p) {
+        var act = p.state === 'active';
+        var card = h('div', 'rounded-xl border p-3 ' + (act ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white'));
+        var top = h('div', 'flex items-center justify-between gap-2');
+        top.appendChild(h('span', 'text-sm font-semibold text-slate-900', p.label + ' · \u20B9' + p.price));
+        top.appendChild(h('span', 'text-[11px] font-bold rounded-full px-2 py-0.5 ' + (act ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'), act ? 'Active now' : 'Up next'));
+        card.appendChild(top);
+        card.appendChild(h('p', 'text-xs text-slate-600 mt-1', act ? ('Runs until ' + fmtDate(p.end) + ' · ' + p.days + (p.days === 1 ? ' day' : ' days') + ' left') : ('Starts ' + fmtDate(p.start) + ' · ends ' + fmtDate(p.end))));
+        list.appendChild(card);
+      });
+      root.appendChild(list);
+      if (s.pending) {
+        root.appendChild(h('p', 'text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3', 'A new payment (ref ' + s.pending.ref + ') is waiting for confirmation. It will appear here as an "Up next" pack once confirmed.'));
+        var chk = h('button', 'mt-2 px-3 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg cursor-pointer', 'Check status');
+        chk.type = 'button';
+        chk.addEventListener('click', function () { refresh().then(function () { render(); }); });
+        root.appendChild(chk);
+      } else if (s.payments) {
+        var add = h('button', 'mt-4 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg cursor-pointer', '+ Add another pack');
+        add.type = 'button';
+        add.addEventListener('click', function () { ui.adding = true; ui.mode = 'pay'; ui.err = ''; render(); });
+        root.appendChild(add);
+      }
       return;
     }
 
@@ -254,6 +289,10 @@
     f.appendChild(h('p', 'text-xs font-semibold text-slate-700', '2. Tell us it is paid'));
     var utr = input('UPI reference / UTR number', 'text', 'utr', 'off');
     var contact = input('Mobile number or email', 'text', 'contact', 'off');
+    // keep what the user already typed when the plan is changed
+    utr.field.value = ui.utr || ''; contact.field.value = ui.contact || '';
+    utr.field.addEventListener('input', function () { ui.utr = utr.field.value; });
+    contact.field.addEventListener('input', function () { ui.contact = contact.field.value; });
     f.appendChild(utr.wrap); f.appendChild(contact.wrap);
     var err = h('p', 'text-xs text-rose-600 min-h-[1rem]', ui.err);
     err.setAttribute('role', 'alert');
@@ -265,7 +304,7 @@
       ev.preventDefault();
       go.disabled = true; err.textContent = '';
       api('/api/pay', { body: { action: 'request', plan: plan.id, utr: utr.field.value, contact: contact.field.value } }).then(function (r) {
-        if (r.status === 200 && r.json && r.json.ok) { ui.err = ''; setStatus(r.json); render(); toast('Payment submitted. We will confirm it shortly.', 'success'); }
+        if (r.status === 200 && r.json && r.json.ok) { ui.err = ''; ui.adding = false; ui.utr = ''; ui.contact = ''; setStatus(r.json); render(); toast('Payment submitted. We will confirm it shortly.', 'success'); }
         else { err.textContent = (r.json && r.json.error) || 'Could not submit. Please try again.'; go.disabled = false; }
       }, function () { err.textContent = 'Network problem. Please try again.'; go.disabled = false; });
     });
