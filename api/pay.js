@@ -48,6 +48,19 @@ module.exports = async function handler(req, res) {
       const plan = typeof body.plan === 'string' && Object.prototype.hasOwnProperty.call(A.PLANS, body.plan) ? A.PLANS[body.plan] : null;
       if (!plan) return A.send(res, 422, { error: 'Please choose a plan.' });
 
+      // One payment waiting at a time (prevents duplicate / conflicting requests), and a sane cap on stacked packs
+      const mine = await store.pipeline([['SMEMBERS', A.k('dev', deviceId, 'pend')]]).then((r) => r[0] || []);
+      if (mine.length) {
+        const recs = await store.pipeline(mine.slice(0, 20).map((u) => ['GET', A.k('pay', u)]));
+        if (recs.some((r) => { const x = r ? A.safeParse(r) : null; return x && x.status === 'pending'; })) {
+          return A.send(res, 409, { error: 'You already have a payment waiting for approval. Please wait until it is confirmed before adding another pack.' });
+        }
+      }
+      const curLic = await A.loadLicense(store, deviceId);
+      if (curLic && curLic.exp > Date.now() && (Array.isArray(curLic.packs) ? curLic.packs.filter((x) => x.end > Date.now()).length : 1) >= 6) {
+        return A.send(res, 409, { error: 'You already have the maximum number of packs queued. Please use some of them first.' });
+      }
+
       const rec = {
         utr, plan: plan.id, price: plan.price, contact,
         deviceId, ipHash, status: 'pending', createdAt: Date.now(),
